@@ -126,7 +126,7 @@ public class Bob extends Actor {
             vSpeed = 0;
         }
     }
-
+    
     public void collect() {
         Actor coin = getOneIntersectingObject(Coin.class);
         if (coin != null) {
@@ -174,8 +174,22 @@ public class Bob extends Actor {
     }
     // a temporary 'shield' after enemy collision
     private void temporaryShield(){
-        sleepFor(75);
+        GreenfootImage image = getImage(); // Get current image
+        long startTime = System.currentTimeMillis();
+        boolean visible = true;
+        while (System.currentTimeMillis() - startTime < 3000) { // Loop for 3 seconds
+            if (visible) {
+                image.setTransparency(0); // Make Bob invisible
+                visible = false;
+            } else {
+                image.setTransparency(255); // Make Bob visible
+                visible = true;
+            }
+            Greenfoot.delay(5); // Short delay to toggle visibility
+        }
+        image.setTransparency(255); // Ensure Bob is visible after the effect
     }
+    
     private void removeLive() {
         List<Live> hearts = getWorld().getObjects(Live.class);
         if (!hearts.isEmpty()) {
