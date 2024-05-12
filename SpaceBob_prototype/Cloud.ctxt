@@ -1,9 +1,14 @@
 #BlueJ class context
 comment0.target=Cloud
-comment0.text=\r\n\ Write\ a\ description\ of\ class\ Cloud\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
 comment1.params=
 comment1.target=Cloud()
 comment2.params=
 comment2.target=void\ act()
-comment2.text=\r\n\ Act\ -\ do\ whatever\ the\ Cloud\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
-numComments=3
+comment2.text=\r\n\ Act\ -\ Move\ the\ cloud\ horizontally\ and\ wrap\ around\ if\ it\ reaches\ the\ edge\ of\ the\ world.\r\n
+comment3.params=
+comment3.target=void\ moveCloud()
+comment3.text=\r\n\ Move\ the\ cloud\ horizontally\ and\ wrap\ around\ if\ it\ reaches\ the\ edge\ of\ the\ world.\r\n
+comment4.params=
+comment4.target=int\ getRandomYPosition()
+comment4.text=\r\n\ Get\ a\ random\ Y\ position\ within\ a\ specified\ range.\r\n\ \r\n\ @return\ The\ random\ Y\ position.\r\n
+numComments=5

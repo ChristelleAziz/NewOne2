@@ -1,25 +1,31 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class Spike here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
-public class Spike extends BadGuys
-{
+public class Spike extends BadGuys {
+
+    public void act() {
+        moveAcrossWorld();
+    }
+
     /**
-     * Act - do whatever the Spike wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
+     * Moves the spike across the world horizontally and wraps around if it reaches the edge.
      */
-    public void act()
-    {
+    private void moveAcrossWorld() {
         int x = getX();
         int worldWidth = getWorld().getWidth();
-          if (x == 0) {
-            setLocation(worldWidth - 1, Greenfoot.getRandomNumber(1) + 623);
+
+        if (x == 0) {
+            setLocation(worldWidth - 1, getRandomYPosition());
         } else if (x >= worldWidth - 1) {
-            setLocation(0, Greenfoot.getRandomNumber(1) + 623);
+            setLocation(0, getRandomYPosition());
         }
+    }
+
+    /**
+     * Gets a random Y position within a specified range.
+     * 
+     * @return The random Y position.
+     */
+    private int getRandomYPosition() {
+        return Greenfoot.getRandomNumber(1) + 623; // Adjust the Y position range as needed
     }
 }

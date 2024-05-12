@@ -1,30 +1,43 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class Star here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
-public class Star extends Actor
-{
-    public Star()
-    {
-        getImage().scale(getImage().getWidth()/60,getImage().getHeight()/60);
+public class Star extends Actor {
+    
+    public Star() {
+        getImage().scale(getImage().getWidth() / 60, getImage().getHeight() / 60);
     }
+    
     /**
-     * Act - do whatever the Star wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
+     * Act - Move the star to the opposite side if it reaches the world boundaries.
      */
-    public void act()
-    {
-        
+    public void act() {
+        moveIfAtWorldBoundaries();
+    }
+    
+    /**
+     * Move the star to the opposite side if it reaches the world boundaries.
+     */
+    private void moveIfAtWorldBoundaries() {
         int x = getX();
         int worldWidth = getWorld().getWidth();
-        if (x == 0) {
-            setLocation(worldWidth - 1, Greenfoot.getRandomNumber(240) + 40);
-        } else if (x >= worldWidth - 1) {
-            setLocation(0, Greenfoot.getRandomNumber(240) + 40);
+        
+        // If the star reaches the left or right boundary, move it to the opposite side
+        if (x == 0 || x >= worldWidth - 1) {
+            moveStarToOppositeSide();
+        }
+    }
+    
+    /**
+     * Move the star to the opposite side.
+     */
+    private void moveStarToOppositeSide() {
+        int worldWidth = getWorld().getWidth();
+        int newY = Greenfoot.getRandomNumber(240) + 40;
+        
+        // Set the star's position based on the side it reached
+        if (getX() == 0) {
+            setLocation(worldWidth - 1, newY);
+        } else {
+            setLocation(0, newY);
         }
     }
 }

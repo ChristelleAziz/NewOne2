@@ -1,4 +1,4 @@
-import greenfoot.*;
+import greenfoot.World;
 
 public class Minion extends BadGuys {
     private boolean addedToWorld = false;
@@ -40,7 +40,17 @@ public class Minion extends BadGuys {
         
         // Get a reference to the world
         World world = getWorld();
-
-        // Rest of your spawnReplacementMinion() method...
+        
+        // Check if the world is null
+        if (world == null) {
+            return;
+        }
+        
+        // Get the height of the world
+        int worldHeight = world.getHeight();
+        
+        // Spawn a new minion at the right corner
+        Minion replacement = new Minion();
+        world.addObject(replacement, world.getWidth() - 1, worldHeight - 1); // Spawn at the bottom-right corner
     }
 }

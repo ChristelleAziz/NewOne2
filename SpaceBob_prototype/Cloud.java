@@ -1,29 +1,38 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class Cloud here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
-public class Cloud extends Actor
-{
-    public Cloud()
-    {
-        getImage().scale(getImage().getWidth()/3,getImage().getHeight()/3);
+public class Cloud extends Actor {
+    
+    public Cloud() {
+        getImage().scale(getImage().getWidth() / 3, getImage().getHeight() / 3);
     }
+    
     /**
-     * Act - do whatever the Cloud wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
+     * Act - Move the cloud horizontally and wrap around if it reaches the edge of the world.
      */
-    public void act()
-    {
+    public void act() {
+        moveCloud();
+    }
+    
+    /**
+     * Move the cloud horizontally and wrap around if it reaches the edge of the world.
+     */
+    private void moveCloud() {
         int x = getX();
         int worldWidth = getWorld().getWidth();
-          if (x == 0) {
-            setLocation(worldWidth - 1, Greenfoot.getRandomNumber(160) + 40);
+
+        if (x == 0) {
+            setLocation(worldWidth - 1, getRandomYPosition());
         } else if (x >= worldWidth - 1) {
-            setLocation(0, Greenfoot.getRandomNumber(160) + 40);
+            setLocation(0, getRandomYPosition());
         }
+    }
+
+    /**
+     * Get a random Y position within a specified range.
+     * 
+     * @return The random Y position.
+     */
+    private int getRandomYPosition() {
+        return Greenfoot.getRandomNumber(160) + 40; // Adjust the Y position range as needed
     }
 }

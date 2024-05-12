@@ -1,26 +1,24 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 
-/**
- * Write a description of class Coin here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
-public class Coin extends Actor
-{
-    public Coin()
-    {
-        getImage().scale(getImage().getWidth()/20,getImage().getHeight()/20);
+public class Coin extends Actor {
+    
+    public Coin() {
+        getImage().scale(getImage().getWidth() / 20, getImage().getHeight() / 20);
     }
+    
     /**
-     * Act - do whatever the Coin wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
+     * Act - Remove the coin if it reaches the left edge of the world.
      */
-    public void act()
-    {
-     if(getX()==0)
-     {
-           getWorld().removeObject(this);
-     }
+    public void act() {
+        removeIfAtLeftEdge();
+    }
+    
+    /**
+     * Remove the coin if it reaches the left edge of the world.
+     */
+    private void removeIfAtLeftEdge() {
+        if (getX() == 0) {
+            getWorld().removeObject(this);
+        }
     }
 }
