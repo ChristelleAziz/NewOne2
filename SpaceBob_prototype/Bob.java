@@ -170,8 +170,12 @@ public class Bob extends Actor {
         if (livesCount == 0) {
             Greenfoot.setWorld(new Background2());
         }
+        temporaryShield();
     }
-
+    // a temporary 'shield' after enemy collision
+    private void temporaryShield(){
+        sleepFor(75);
+    }
     private void removeLive() {
         List<Live> hearts = getWorld().getObjects(Live.class);
         if (!hearts.isEmpty()) {
