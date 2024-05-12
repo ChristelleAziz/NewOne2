@@ -40,7 +40,6 @@ public class Minion extends BadGuys {
         
         // Get a reference to the world
         World world = getWorld();
-
-        // Rest of your spawnReplacementMinion() method...
+        
     }
 }

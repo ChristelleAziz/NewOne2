@@ -8,6 +8,7 @@ public class Bob extends Actor {
     private int jumpHeight = -10;
     private int collect = 0;
     private int livesCount = 5;
+    private int killedEnemies = 0;
     private int bulletsCount = 10;
     private boolean isTouchingSpike = false;
     private boolean collisionDetected = false;
@@ -99,6 +100,7 @@ public class Bob extends Actor {
                 if (minion != null) {
                     // If the bullet intersects with a Minion, remove the Minion
                     getWorld().removeObject(minion); // Remove the minion from the world
+                    killedEnemies++;
                 }
             }
         }
@@ -172,8 +174,8 @@ public class Bob extends Actor {
         }
         temporaryShield();
     }
-    // a temporary 'shield' after enemy collision
-    private void temporaryShield(){
+
+    private void temporaryShield(){ //temporary shield after enemy collision
         GreenfootImage image = getImage(); // Get current image
         long startTime = System.currentTimeMillis();
         boolean visible = true;
@@ -226,17 +228,20 @@ private void addBulletDisplayed() {
 
     
     public void levelUp() {
-        Actor portal = getOneIntersectingObject(Portal.class);
-        if (portal != null) { //Bob touching portal
-            if (level == 1){
-                level = 2;
+        //Actor portal = getOneIntersectingObject(Portal.class);
+        //if (portal != null) { //Bob touching portal
+        //    if (level == 1){
+        //        level = 2;
                 //Greenfoot.setWorld(new Level2World());
-                Greenfoot.setWorld(new Background2());
-            }
-        else if (level == 2) {
-            level = 3;
-            //l3 wrld
-        }
+        //        Greenfoot.setWorld(new Level_2());
+        //    } else if (level == 2) {
+        //    level = 3;
+        //    //L3 wrld
+        //    }
+        //}
+        if (killedEnemies == 1) {
+            Greenfoot.setWorld(new Level_2());
+            killedEnemies = 0; // reset counter
         }
     }
     public void animateRight()
