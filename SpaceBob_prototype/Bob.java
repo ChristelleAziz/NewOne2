@@ -8,7 +8,7 @@ public class Bob extends Actor {
     private int coinsCollected = 0;
     private int livesCount = 5;
     private int bulletsCount = 10;
-    private boolean isTouchingSpike = false;
+    private boolean isTouchingSpike2 = false;
     private boolean collisionDetected = false;
     private boolean hasJumped = false;
     public static int level = 1;
@@ -27,11 +27,22 @@ public class Bob extends Actor {
         collectItems();
         levelUp();
 
-        if (!isTouchingSpike) {
+        if (!isTouchingSpike2) {
             hasJumped = false;
         }
+        
         adjustWorldPosition();
         checkCollision();
+    }
+
+    private boolean isTouchingMinion() {
+        List<Minion> minions = getObjectsInRange(80, Minion.class);
+        return !minions.isEmpty();
+    }
+    
+    private boolean isTouchingSpike() {
+        List<Spike> spikes = getObjectsInRange(50, Spike.class);
+        return !spikes.isEmpty();
     }
 
     private void handleMovement() {
@@ -99,7 +110,7 @@ public class Bob extends Actor {
         for (Actor object : objects) {
             if (object != this && !(object instanceof Live) && !(object instanceof BulletDisplayed)
                     && !(object instanceof PlanetBackground) && !(object instanceof Castle)
-                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label)) {
+                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) && !(object instanceof Star) ) {
                 object.move(-3);
             }
         }
@@ -158,18 +169,21 @@ public class Bob extends Actor {
     }
 
     private void checkCollision() {
-        Actor badGuy = getOneIntersectingObject(BadGuys.class);
-        if (badGuy != null && !collisionDetected) {
-            if (badGuy instanceof Minion || badGuy instanceof Spike) {
+    Actor badGuy = getOneIntersectingObject(BadGuys.class);
+    if (badGuy != null && !collisionDetected) {
+        if (badGuy instanceof Minion || badGuy instanceof Spike) {
+            // Vérifier si Bob touche vraiment le minion ou le spike
+            if (isTouchingMinion() || isTouchingSpike()) {
                 loseLife();
                 collisionDetected = true;
                 GreenfootSound hurtSound = new GreenfootSound("hurt.wav");
                 adjustVolume(hurtSound, 70);
                 hurtSound.play();
             }
-        } else if (badGuy == null) {
-            collisionDetected = false;
         }
+    } else if (badGuy == null) {
+        collisionDetected = false;
+    }
     }
 
     private void loseLife() {

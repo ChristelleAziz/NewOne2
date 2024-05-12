@@ -119,8 +119,8 @@ public class Background extends World {
     }
 
     private void addClouds() {
-        addObject(new Cloud(), 311, 43);
-        addObject(new Cloud(), 466, 134);
+        addObject(new Cloud(), 220, 160);
+        addObject(new Cloud(), 690, 110);
     }
 
     private void addPlanetBackground() {
@@ -145,6 +145,8 @@ public class Background extends World {
         addObject(new Star(), 320, 260);
         addObject(new Star(), 960, 170);
         addObject(new Star(), 732, 200);
+        addObject(new Star(), 303, 35);
+        addObject(new Star(), 81, 210);
     }
 
     private void addPlatforms() {
@@ -195,6 +197,6 @@ public class Background extends World {
     
     private void addCoinsCounter() {
         coinsCounter = new Label("Coins: 0");
-        addObject(coinsCounter, 660, 60);
+        addObject(coinsCounter, 860, 60);
     }
 }
