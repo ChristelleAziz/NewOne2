@@ -35,14 +35,20 @@ public class Bob extends Actor {
     }
 
     private void handleMovement() {
-        animationSpeed++;
+        animationSpeed = animationSpeed + 1;
         if (Greenfoot.isKeyDown("right") || Greenfoot.isKeyDown("d")) {
             move(3);
-            animateRight();
+            if(animationSpeed % 5 == 0)
+            {
+                animateRight();
+            }
         }
         if (Greenfoot.isKeyDown("left") || Greenfoot.isKeyDown("a")) {
             move(-4);
-            animateLeft();
+            if(animationSpeed % 5 == 0)
+            {
+                animateLeft();
+            }
         }
         if ((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w")) && !hasJumped) {
             jump();
@@ -231,21 +237,28 @@ public class Bob extends Actor {
         }
     }
     
-    public void animateRight() {
-        if (frame == 1) {
+    public void animateRight()
+    {
+        if(frame == 1)
+        {
             setImage(bob1);
             frame = 2;
-        } else {
+        }
+        else
+        {
             setImage(bob2);
             frame = 1;
         }
     }
-    
-    public void animateLeft() {
-        if (frame == 1) {
+    public void animateLeft()
+    {
+        if(frame == 1)
+        {
             setImage(bob3);
             frame = 2;
-        } else {
+        }
+        else
+        {
             setImage(bob4);
             frame = 1;
         }
