@@ -1,8 +1,10 @@
 import greenfoot.World;
+import greenfoot.*;
+import java.util.List;
 
 public class Minion extends BadGuys {
     private boolean addedToWorld = false;
-    
+    public static int killedEnemies = 0;
     public Minion() {
         getImage().scale(getImage().getWidth()/4, getImage().getHeight()/4);
     }
@@ -11,7 +13,10 @@ public class Minion extends BadGuys {
         if (!addedToWorld) {
             return; // Exit if not yet added to the world
         }
-        
+        if (killedEnemies == 1) {
+            Greenfoot.setWorld(new Level_2());
+            killedEnemies = 0; //reinitialise counter
+        }
         int x = getX();
         int worldWidth = getWorld().getWidth();
         if (x <= 0 || x >= worldWidth - 1) {
@@ -29,6 +34,7 @@ public class Minion extends BadGuys {
     }
     
     public void handleCollision() {
+        killedEnemies++;
         getWorld().removeObject(this); // Remove the minion from the world
     }
     

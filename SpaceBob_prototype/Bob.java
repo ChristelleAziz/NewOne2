@@ -25,7 +25,7 @@ public class Bob extends Actor {
         handleMovement();
         checkFalling();
         collectItems();
-        levelUp();
+        //levelUp();
 
         if (!isTouchingSpike) {
             hasJumped = false;
