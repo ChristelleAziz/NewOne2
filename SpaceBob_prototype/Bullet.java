@@ -8,7 +8,7 @@ public class Bullet extends Actor {
     }
 
     public void act() {
-        move(speed);
+        moveBullet();
         if (getWorld() != null) { // Check if the bullet is still in the world
         checkCollision();
         }
