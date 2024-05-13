@@ -11,7 +11,7 @@ public class Bob extends Actor {
     private boolean isTouchingSpike2 = false;
     private boolean collisionDetected = false;
     private boolean hasJumped = false;
-    public static int level = 1;
+    //public static int level = 1;
 
     public int frame = 1;
     public int animationSpeed;
@@ -25,7 +25,6 @@ public class Bob extends Actor {
         handleMovement();
         checkFalling();
         collectItems();
-        //levelUp();
 
         if (!isTouchingSpike2) {
             hasJumped = false;
@@ -236,18 +235,6 @@ public class Bob extends Actor {
             int newX = 40 + bulletsDisplayed.size() * 20;
             BulletDisplayed newBullet = new BulletDisplayed();
             getWorld().addObject(newBullet, newX, 90);
-        }
-    }
-
-    public void levelUp() {
-        Actor portal = getOneIntersectingObject(Portal.class);
-        if (portal != null) {
-            if (level == 1) {
-            level = 2;
-            Greenfoot.setWorld(new Background2());
-            } else if (level == 2) {
-            level = 3;
-            }
         }
     }
     

@@ -5,6 +5,7 @@ import java.util.List;
 public class Minion extends BadGuys {
     private boolean addedToWorld = false;
     public static int killedEnemies = 0;
+    public static int level = 1;
     public Minion() {
         getImage().scale(getImage().getWidth()/4, getImage().getHeight()/4);
     }
@@ -14,8 +15,21 @@ public class Minion extends BadGuys {
             return; // Exit if not yet added to the world
         }
         if (killedEnemies == 1) {
-            Greenfoot.setWorld(new Level_2());
-            killedEnemies = 0; //reinitialise counter
+            if (level == 1) {
+                Greenfoot.setWorld(new Level2());
+                killedEnemies = 0; //reinitialise counter
+                level++; //increment level
+            }
+            if (level == 2) {
+                Greenfoot.setWorld(new Level3());
+                killedEnemies = 0; //reinitialise counter
+                level++; //increment level
+            }
+            if (level == 3) {
+                Greenfoot.setWorld(new Level4());
+                killedEnemies = 0; //reinitialise counter
+                level++; //increment level
+            }
         }
         int x = getX();
         int worldWidth = getWorld().getWidth();
