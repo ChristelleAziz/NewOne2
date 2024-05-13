@@ -148,7 +148,7 @@ public class Bob extends Actor {
         if (coin != null) {
             getWorld().removeObject(coin);
             coinsCollected++;
-            ((Background) getWorld()).changeCoinsCounter(1);
+            ((Level_1) getWorld()).changeCoinsCounter(1);
             GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
             adjustVolume(pickupCoinSound, 70);
             pickupCoinSound.play();
@@ -189,6 +189,7 @@ public class Bob extends Actor {
         livesCount--;
         removeLive();
         if (livesCount == 0) {
+            getWorld().removeObject(this);
             Greenfoot.setWorld(new Background2());
         }
         temporaryInvincibility();

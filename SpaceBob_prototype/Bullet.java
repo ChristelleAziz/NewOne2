@@ -2,6 +2,8 @@ import greenfoot.*;
 
 public class Bullet extends Actor {
     private int speed = 20;
+    public static int killedEnemies = 0;
+    public static int level = 1;
 
     public Bullet() {
         getImage().scale(getImage().getWidth() / 5, getImage().getHeight() / 5);
@@ -12,6 +14,8 @@ public class Bullet extends Actor {
         if (getWorld() != null) { // Check if the bullet is still in the world
         checkCollision();
         }
+        resetLevel();
+        levelUp();
     }
 
     /**
@@ -42,7 +46,37 @@ public class Bullet extends Actor {
             Minion m = (Minion)minion;
             m.handleCollision();
             getWorld().removeObject(this);
+            killedEnemies++;
             return;
         }
     }
+    public void resetLevel() {
+        if (Bob.class == null) {
+            level = 1;
+            speed = 100;
+        }
+    }
+    public void levelUp() {
+        if (killedEnemies == 1) {
+            if (level == 1) {
+                Greenfoot.setWorld(new Level_2());
+                killedEnemies = 0; //reinitialise counter
+                level++;//increment level
+                return;
+            }
+            if (level == 2) {
+                Greenfoot.setWorld(new Level_3());
+                killedEnemies = 0; //reinitialise counter
+                level++; //increment level
+                return;
+            }
+            if (level == 3) {
+                Greenfoot.setWorld(new Level_4());
+                killedEnemies = 0; //reinitialise counter
+                level++; //increment level
+                return;
+            }
+        }
+    }
+    
 }

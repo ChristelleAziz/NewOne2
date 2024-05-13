@@ -96,9 +96,9 @@ public class Level_2 extends Levels {
         sound.setVolume(volume);
     }
 
-    public void stopped() {
-        backgroundMusic.stop();
-    }
+    //public void stopped() {
+    ///    backgroundMusic.stop();
+    //}
 
     private void prepare() {
         addPlanetBackground();

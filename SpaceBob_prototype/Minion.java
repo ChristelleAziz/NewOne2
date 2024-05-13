@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Minion extends BadGuys {
     private boolean addedToWorld = false;
-    public static int killedEnemies = 0;
-    public static int level = 1;
+    //public static int killedEnemies = 0;
+    //public static int level = 1;
     public Minion() {
         getImage().scale(getImage().getWidth()/4, getImage().getHeight()/4);
     }
@@ -24,37 +24,37 @@ public class Minion extends BadGuys {
             // Spawn a new minion to replace the removed one
             spawnReplacementMinion();
         }    
-        levelUp();
+        //levelUp();
     }
-    public void levelUp() {
-        if (killedEnemies == 1) {
-            if (level == 1) {
-                Greenfoot.setWorld(new Level_2());
-                killedEnemies = 0; //reinitialise counter
-                level++;//increment level
-                return;
-            }
-            if (level == 2) {
-                Greenfoot.setWorld(new Level_3());
-                killedEnemies = 0; //reinitialise counter
-                level++; //increment level
-                return;
-            }
-            if (level == 3) {
-                Greenfoot.setWorld(new Level_4());
-                killedEnemies = 0; //reinitialise counter
-                level++; //increment level
-                return;
-            }
-        }
-    }
+    //public void levelUp() {
+    //    if (killedEnemies == 1) {
+    //        if (level == 1) {
+    //            Greenfoot.setWorld(new Level_2());
+    //            killedEnemies = 0; //reinitialise counter
+    //            level++;//increment level
+    //            return;
+    //        }
+    //        if (level == 2) {
+    //            Greenfoot.setWorld(new Level_3());
+    //            killedEnemies = 0; //reinitialise counter
+     //           level++; //increment level
+    //            return;
+    //        }
+    //        if (level == 3) {
+    //            Greenfoot.setWorld(new Level_4());
+    //            killedEnemies = 0; //reinitialise counter
+    //            level++; //increment level
+    //            return;
+     //       }
+     //   }
+    //}
     @Override
     protected void addedToWorld(World world) {
         addedToWorld = true; // Update flag when added to the world
     }
     
     public void handleCollision() {
-        killedEnemies++;
+        //killedEnemies++;
         //getWorld().removeObject(this); // Remove the minion from the world
     }
     
