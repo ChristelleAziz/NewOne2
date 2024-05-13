@@ -10,7 +10,7 @@ public class Level2 extends World {
     public Level2() {    
         super(1000, 800, 1); 
         prepare();
-        setupBackgroundMusic();
+        //setupBackgroundMusic();
     }
     
      public void setCoinsCounterLabel(String text) {

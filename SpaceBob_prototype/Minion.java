@@ -18,17 +18,20 @@ public class Minion extends BadGuys {
             if (level == 1) {
                 Greenfoot.setWorld(new Level2());
                 killedEnemies = 0; //reinitialise counter
-                level++; //increment level
+                level++;//increment level
+                return;
             }
             if (level == 2) {
                 Greenfoot.setWorld(new Level3());
                 killedEnemies = 0; //reinitialise counter
                 level++; //increment level
+                return;
             }
             if (level == 3) {
                 Greenfoot.setWorld(new Level4());
                 killedEnemies = 0; //reinitialise counter
                 level++; //increment level
+                return;
             }
         }
         int x = getX();
