@@ -6,6 +6,7 @@ public class Background extends World {
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
     private Label coinsCounter;
+    private Label killedEnemiesCounter;
 
     public Background() {    
         super(1000, 800, 1); 
@@ -13,7 +14,7 @@ public class Background extends World {
         setupBackgroundMusic();
     }
     
-     public void setCoinsCounterLabel(String text) {
+    public void setCoinsCounterLabel(String text) {
         coinsCounter.setText(text);
     }
 
@@ -28,6 +29,23 @@ public class Background extends World {
         int score = Integer.parseInt(scoreStr);
         int newScore = score + amount;
         coinsCounter.setLabel("Coins: " + newScore);
+    }
+    
+    public void setKilledEnemiesCounterLabel(String text) {
+        killedEnemiesCounter.setText(text);
+    }
+
+    public String getKilledEnemiesCounterLabel() {
+        return killedEnemiesCounter.getText();
+    }
+    
+    public void changeKilledEnemiesCounter(int num) {
+        String labelText = killedEnemiesCounter.getLabel();
+        int index = labelText.indexOf(":");
+        String scoreStr = labelText.substring(index + 2);
+        int score = Integer.parseInt(scoreStr);
+        int newScore = score + num;
+        coinsCounter.setLabel("Enemies Killed: " + newScore);
     }
 
     private void respawnMinions() {
@@ -116,6 +134,7 @@ public class Background extends World {
         addLives();
         addBulletsDisplayedFirst();
         addCoinsCounter();
+        addKilledEnemiesCounter();
     }
 
     private void addClouds() {
@@ -198,5 +217,9 @@ public class Background extends World {
     private void addCoinsCounter() {
         coinsCounter = new Label("Coins: 0");
         addObject(coinsCounter, 860, 60);
+    }
+    private void addKilledEnemiesCounter() {
+        killedEnemiesCounter = new Label("Enemies Killed: 0");
+        addObject(killedEnemiesCounter, 860, 40);
     }
 }
