@@ -14,6 +14,19 @@ public class Minion extends BadGuys {
         if (!addedToWorld) {
             return; // Exit if not yet added to the world
         }
+        
+        int x = getX();
+        int worldWidth = getWorld().getWidth();
+        if (x <= 0 || x >= worldWidth - 1) {
+            // Remove the minion from the world
+            getWorld().removeObject(this);
+            
+            // Spawn a new minion to replace the removed one
+            spawnReplacementMinion();
+        }    
+        levelUp();
+    }
+    public void levelUp() {
         if (killedEnemies == 1) {
             if (level == 1) {
                 Greenfoot.setWorld(new Level2());
@@ -34,17 +47,7 @@ public class Minion extends BadGuys {
                 return;
             }
         }
-        int x = getX();
-        int worldWidth = getWorld().getWidth();
-        if (x <= 0 || x >= worldWidth - 1) {
-            // Remove the minion from the world
-            getWorld().removeObject(this);
-            
-            // Spawn a new minion to replace the removed one
-            spawnReplacementMinion();
-        }    
     }
-    
     @Override
     protected void addedToWorld(World world) {
         addedToWorld = true; // Update flag when added to the world
