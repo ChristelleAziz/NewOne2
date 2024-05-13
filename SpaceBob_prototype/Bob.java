@@ -198,7 +198,7 @@ public class Bob extends Actor {
         GreenfootImage image = getImage();
         long startTime = System.currentTimeMillis();
         boolean visible = true;
-        while (System.currentTimeMillis() - startTime < 3000) {
+        while (System.currentTimeMillis() - startTime < 1800) {
             if (visible) {
                 image.setTransparency(0);
                 visible = false;
