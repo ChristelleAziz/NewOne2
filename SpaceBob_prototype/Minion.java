@@ -29,19 +29,19 @@ public class Minion extends BadGuys {
     public void levelUp() {
         if (killedEnemies == 1) {
             if (level == 1) {
-                Greenfoot.setWorld(new Level2());
+                Greenfoot.setWorld(new Level_2());
                 killedEnemies = 0; //reinitialise counter
                 level++;//increment level
                 return;
             }
             if (level == 2) {
-                Greenfoot.setWorld(new Level3());
+                Greenfoot.setWorld(new Level_3());
                 killedEnemies = 0; //reinitialise counter
                 level++; //increment level
                 return;
             }
             if (level == 3) {
-                Greenfoot.setWorld(new Level4());
+                Greenfoot.setWorld(new Level_4());
                 killedEnemies = 0; //reinitialise counter
                 level++; //increment level
                 return;
@@ -55,7 +55,7 @@ public class Minion extends BadGuys {
     
     public void handleCollision() {
         killedEnemies++;
-        getWorld().removeObject(this); // Remove the minion from the world
+        //getWorld().removeObject(this); // Remove the minion from the world
     }
     
     private void spawnReplacementMinion() {
