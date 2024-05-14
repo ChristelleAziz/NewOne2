@@ -66,6 +66,9 @@ public class Bullet extends Actor {
             if (level == 3) {
                 Greenfoot.setWorld(new Level_4());
             }
+            if (level == 4) {
+                Greenfoot.setWorld(new Level_5());
+            }
             killedEnemies = 0; //reinitialise counter
             level++;//increment level
         }
