@@ -14,7 +14,7 @@ public class Bullet extends Actor {
         if (getWorld() != null) { // Check if the bullet is still in the world
         checkCollision();
         }
-        resetLevel();
+        //resetLevel();
         levelUp();
     }
 
@@ -50,11 +50,11 @@ public class Bullet extends Actor {
             return;
         }
     }
-    public void resetLevel() {
-        if (object instanceof Bo == null) {
-            level = 1;
-        }
-    }
+    //public void resetLevel() {
+        //if (object instanceof Bo == null) {
+         //   level = 1;
+        //}
+    //}
     public void levelUp() {
         if (killedEnemies == 1) {
             if (level == 1) {

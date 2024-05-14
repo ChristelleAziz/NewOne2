@@ -8,7 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Levels extends World
 {
-
+    public static Label coinsCounter;
     /**
      * Constructor for objects of class Levels.
      * 

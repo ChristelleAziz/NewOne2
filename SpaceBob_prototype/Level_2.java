@@ -4,7 +4,7 @@ import java.util.List;
 public class Level_2 extends Levels {
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
-    private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
+    private int minionSpawnTimer = Greenfoot.getRandomNumber(50);
     private Label coinsCounter;
 
     public Level_2() {    

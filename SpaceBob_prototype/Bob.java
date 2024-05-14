@@ -148,7 +148,15 @@ public class Bob extends Actor {
         if (coin != null) {
             getWorld().removeObject(coin);
             coinsCollected++;
-            ((Level_1) getWorld()).changeCoinsCounter(1);
+            if (getWorld() instanceof Level_1) {
+                ((Level_1) getWorld()).changeCoinsCounter(1);
+            } else if (getWorld() instanceof Level_2) {
+                ((Level_2) getWorld()).changeCoinsCounter(1);
+            } else if (getWorld() instanceof Level_3) {
+                ((Level_3) getWorld()).changeCoinsCounter(1);
+            } else if (getWorld() instanceof Level_4) {
+                ((Level_4) getWorld()).changeCoinsCounter(1);
+            }
             GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
             adjustVolume(pickupCoinSound, 70);
             pickupCoinSound.play();

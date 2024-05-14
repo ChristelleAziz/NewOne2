@@ -5,7 +5,7 @@ public class Level_1 extends Levels {
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
-    private Label coinsCounter;
+    //private Label coinsCounter;
     private Label killedEnemiesCounter;
 
     public Level_1() {    
