@@ -115,7 +115,7 @@ public class Level2 extends World {
         addBob();
         addLives();
         addBulletsDisplayedFirst();
-        addCoinsCounter();
+        //addCoinsCounter();
     }
 
     private void addClouds() {

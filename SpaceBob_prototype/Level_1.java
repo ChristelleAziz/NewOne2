@@ -133,7 +133,7 @@ public class Level_1 extends Levels {
         addLives();
         addBulletsDisplayedFirst();
         addCoinsCounter();
-        addKilledEnemiesCounter();
+        //addKilledEnemiesCounter();
     }
 
     private void addClouds() {

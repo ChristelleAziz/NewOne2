@@ -114,7 +114,7 @@ public class Level_3 extends Levels {
         addBob();
         addLives();
         addBulletsDisplayedFirst();
-        addCoinsCounter();
+        //addCoinsCounter();
     }
 
     private void addClouds() {

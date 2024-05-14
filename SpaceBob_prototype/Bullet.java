@@ -56,7 +56,7 @@ public class Bullet extends Actor {
         //}
     //}
     public void levelUp() {
-        if (killedEnemies == 1) {
+        if (killedEnemies == 2) {
             if (level == 1) {
                 Greenfoot.setWorld(new Level_2());
             }
