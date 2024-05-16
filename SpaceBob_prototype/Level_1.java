@@ -1,20 +1,70 @@
 import greenfoot.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Level_1 extends Levels {
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
-    //private Label coinsCounter;
     private Label killedEnemiesCounter;
+    // private GreenfootImage meteorite4 = new GreenfootImage("test24.png");
+    private int meteoriteCounter = 0;
 
     public Level_1() {    
         prepare();
         setupBackgroundMusic();
     }
-    
-    public void setCoinsCounterLabel(String text) {
-        coinsCounter.setText(text);
+
+     public void act() {
+        spawnCoins();
+        spawnBullets();
+        checkMinionRespawn();
+        super.act();
+        adjustActorPositions();
+        minionAddedThisAct = false;
+
+        meteoriteCounter++;
+        
+        spawnMeteorites();
+        
+        removeAndReplaceMeteorites();
+    }
+
+private void removeAndReplaceMeteorites() {
+    List<Meteorite2> meteoritesToRemove = new ArrayList<>();
+    List<Meteorite2> meteorites = getObjects(Meteorite2.class);
+
+    for (Meteorite2 meteorite : meteorites) {
+        if (meteorite.shouldRemove()) {
+            meteoritesToRemove.add(meteorite);
+        }
+    }
+
+    for (Meteorite2 meteorite : meteoritesToRemove) {
+        // Get the position before removing the meteorite
+        int x = meteorite.getX();
+        int y = meteorite.getY();
+        
+        // Remove the meteorite from the world
+        removeObject(meteorite);
+        
+        // Add a new MeteoriteOnPlanet at the same position
+        addObject(new MeteoriteOnPlanet(), x, 620);
+    }
+}
+
+public int getScrollOffset() {
+        // You can return a constant scroll speed for simplicity
+        // Replace 5 with your desired scroll speed value
+        return 5;
+    }
+
+private void spawnMeteorites() {
+         meteoriteCounter++;
+        // Add a new meteorite every 100 acts (adjust as needed)
+        if (meteoriteCounter % 100 == 0 && Greenfoot.getRandomNumber(100) < 10) {
+            addObject(new Meteorite2(), Greenfoot.getRandomNumber(getWidth()), 0);
+        }
     }
 
     public String getCoinsCounterLabel() {
@@ -54,15 +104,6 @@ public class Level_1 extends Levels {
         if (numMinions < maxMinions) {
             addMinions();
         }
-    }
-
-    public void act() {
-        spawnCoins();
-        spawnBullets();
-        checkMinionRespawn();
-        super.act();
-        adjustActorPositions();
-        minionAddedThisAct = false;
     }
 
     private void adjustActorPositions() {
@@ -134,8 +175,7 @@ public class Level_1 extends Levels {
         addBulletsDisplayedFirst();
         addCoinsCounter();
         addKilledEnemiesCounter();
-    }
-
+}
     private void addClouds() {
         addObject(new Cloud(), 220, 160);
         addObject(new Cloud(), 690, 110);

@@ -35,8 +35,15 @@ public class Bob extends Actor {
     }
 
     private boolean isTouchingMinion() {
-        List<Minion> minions = getObjectsInRange(80, Minion.class);
-        return !minions.isEmpty();
+    List<Minion> minions = getObjectsInRange(50000000, Minion.class);
+    
+    for (Minion minion : minions) {
+        // Vérifie si le Minion est dans la moitié droite horizontalement par rapport à Bob
+        if (minion.getX() > getX() && minion.getX() <= getX() + getImage().getWidth() / 2) {
+            return true;
+        }
+    }
+    return false;
     }
     
     private boolean isTouchingSpike() {
@@ -44,6 +51,11 @@ public class Bob extends Actor {
         return !spikes.isEmpty();
     }
 
+        private boolean isTouchingMeteorite() {
+        List<Meteorite2> meteorites = getObjectsInRange(50, Meteorite2.class);
+        return !meteorites.isEmpty();
+    }
+    
     private void handleMovement() {
         animationSpeed = animationSpeed + 1;
         if (Greenfoot.isKeyDown("right") || Greenfoot.isKeyDown("d")) {
@@ -127,11 +139,18 @@ public class Bob extends Actor {
             verticalSpeed = 0;
         }
     }
-
-    private boolean onGround() {
-        Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
-        return under != null;
+    
+private boolean onGround() {
+     // Get the platform at Bob's feet
+    Platform platform = (Platform)getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
+    
+    // Check if a platform is found and Bob is on the left half of it horizontally
+    if (platform != null && getX() >= platform.getX() - platform.getImage().getWidth() / 2 &&
+        getX() <= platform.getX()) {
+        return true;
     }
+    return false;
+}
 
     private boolean onPlanet() {
         Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Planet.class);
@@ -180,9 +199,9 @@ public class Bob extends Actor {
     private void checkCollision() {
     Actor badGuy = getOneIntersectingObject(BadGuys.class);
     if (badGuy != null && !collisionDetected) {
-        if (badGuy instanceof Minion || badGuy instanceof Spike) {
+        if (badGuy instanceof Minion || badGuy instanceof Spike || badGuy instanceof Meteorite2) {
             // Vérifier si Bob touche vraiment le minion ou le spike
-            if (isTouchingMinion() || isTouchingSpike()) {
+            if (isTouchingMinion() || isTouchingSpike() || isTouchingMeteorite()) {
                 loseLife();
                 collisionDetected = true;
                 GreenfootSound hurtSound = new GreenfootSound("hurt.wav");
