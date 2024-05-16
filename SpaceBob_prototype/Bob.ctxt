@@ -2,8 +2,8 @@
 comment0.target=Bob
 comment1.params=
 comment1.target=void\ act()
-comment10.params=sound\ volume
-comment10.target=void\ adjustVolume(greenfoot.GreenfootSound,\ int)
+comment10.params=filename
+comment10.target=void\ playSound(java.lang.String)
 comment11.params=
 comment11.target=void\ adjustWorldPosition()
 comment12.params=
