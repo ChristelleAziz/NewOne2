@@ -4,18 +4,24 @@ import java.util.List;
 public class Bob extends Actor {
     private int verticalSpeed = 0;
     private int acceleration = 1;
-    private int jumpHeight = -10;
+    private int jumpHeight = -20;
     private int livesCount = 5;
     private int bulletsCount = 10;
+    private boolean isTouchingSpike2 = false;
+    private boolean collisionDetected = false;
     private int animationSpeed;
     private int frame = 1;
-    private boolean collisionDetected = false;
+    private boolean doubleJumpAvailable = true;
 
-    private GreenfootImage bob1 = new GreenfootImage("Bob.png");
-    private GreenfootImage bob2 = new GreenfootImage("Bob2.png");
-    private GreenfootImage bob3 = new GreenfootImage("RBob1.png");
-    private GreenfootImage bob4 = new GreenfootImage("RBob2.png");
-
+    private GreenfootImage bobwalk1right = new GreenfootImage("bob_walk1right.png");
+    private GreenfootImage bobwalk2right = new GreenfootImage("bob_walk2right.png");
+    private GreenfootImage bobwalk3right = new GreenfootImage("bob_walk3right.png");
+    private GreenfootImage bobwalk4right = new GreenfootImage("bob_walk4right.png");
+    
+    private GreenfootImage bobwalk1left = new GreenfootImage("bob_walk1left.png");
+    private GreenfootImage bobwalk2left = new GreenfootImage("bob_walk2left.png");
+    private GreenfootImage bobwalk3left = new GreenfootImage("bob_walk3left.png");
+    private GreenfootImage bobwalk4left = new GreenfootImage("bob_walk4left.png");
     public void act() {
         handleMovement();
         checkFalling();
@@ -37,37 +43,50 @@ public class Bob extends Actor {
         return !getObjectsInRange(50, Meteorite2.class).isEmpty();
     }
     
-    private void handleMovement() {
-        animationSpeed++;
-        if (Greenfoot.isKeyDown("right") || Greenfoot.isKeyDown("d")) {
-            moveRight();
-        }
-        if (Greenfoot.isKeyDown("left") || Greenfoot.isKeyDown("a")) {
-            moveLeft();
-        }
-        if ((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w")) && verticalSpeed == 0) {
-            jump();
-        }
-        if (bulletsCount > 0 && Greenfoot.mouseClicked(null)) {
-            shootBullet();
-        }
+private void handleMovement() {
+    animationSpeed = animationSpeed + 1;
+    if (Greenfoot.isKeyDown("right") || Greenfoot.isKeyDown("d")) {
+        moveRight();
     }
+    if (Greenfoot.isKeyDown("left") || Greenfoot.isKeyDown("a")) {
+        moveLeft();
+    }
+    if ((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w")) && (onPlatform() || onPlanet() || doubleJumpAvailable)) {
+        jump();
+        setImage(bobwalk3right);
+    }
+    if (bulletsCount > 0 && Greenfoot.mouseClicked(null)) {
+        shootBullet();
+    }
+}
 
     private void moveRight() {
         move(3);
+        if(animationSpeed % 5 == 0)
         animateRight();
     }
 
     private void moveLeft() {
-        move(-4);
+        move(-5);
+        if(animationSpeed % 5 == 0)
         animateLeft();
     }
-
-    private void jump() {
+    
+private void jump() {
+    if (onPlatform() || onPlanet()) {
+        // Si Bob est sur une plateforme ou une planète
         verticalSpeed = jumpHeight;
         fall();
         playSound("jump10.wav");
+        doubleJumpAvailable = true; // Activer le double saut
+    } else if (!onPlatform() && !onPlanet() && doubleJumpAvailable) {
+        // Si Bob n'est pas sur une plateforme ou une planète et que le double saut est disponible
+        verticalSpeed = jumpHeight;
+        fall();
+        playSound("jump10.wav");
+        doubleJumpAvailable = false; // Désactiver le double saut après le saut initial
     }
+}
 
         private void shootBullet() {
         getWorld().addObject(new Bullet(), getX(), getY());
@@ -81,11 +100,12 @@ public class Bob extends Actor {
         }
     }
     
-    private void playSound(String filename) {
-        GreenfootSound sound = new GreenfootSound(filename);
-        sound.setVolume(70);
-        sound.play();
-    }
+    
+        private void playSound(String filename) {
+            GreenfootSound sound = new GreenfootSound(filename);
+            sound.setVolume(70);
+            sound.play();
+        }
 
     private void adjustWorldPosition() {
         for (Actor object : getWorld().getObjects(Actor.class)) {
@@ -96,29 +116,36 @@ public class Bob extends Actor {
             }
         }
     }
-
-    private void fall() {
-        setLocation(getX(), getY() + verticalSpeed);
-        verticalSpeed += acceleration;
+    
+private void fall() {
+    setLocation(getX(), getY() + verticalSpeed);
+    verticalSpeed += acceleration;
+    if (onPlatform() || onPlanet()) {
+        doubleJumpAvailable = true; // Réinitialiser le double saut lorsque sur le sol
     }
+}
 
-    private void checkFalling() {
-        if (!onGround() && !onPlanet()) {
+
+private void checkFalling() {
+        if (!onPlatform() && !onPlanet()) {
             fall();
         } else {
             verticalSpeed = 0;
+            doubleJumpAvailable = true; // Réactiver le double saut lorsque sur le sol
         }
     }
-        
-        private boolean onGround() {
-        Platform platform = (Platform)getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
-        return platform != null && getX() >= platform.getX() - platform.getImage().getWidth() / 2 &&
-            getX() <= platform.getX();
-    }
+    
+private boolean onPlatform() {
+    Platform platform = (Platform)getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
+    boolean onPlatform = platform != null && getX() >= platform.getX() - platform.getImage().getWidth() / 2 &&
+        getX() <= platform.getX();
+    return onPlatform;
+}
 
-    private boolean onPlanet() {
-        return getOneObjectAtOffset(0, getImage().getHeight() / 2, Planet.class) != null;
-    }
+private boolean onPlanet() {
+    boolean onPlanet = getOneObjectAtOffset(0, getImage().getHeight() / 2, Planet.class) != null;
+    return onPlanet;
+}
 
     private void collectItems() {
         collectCoin();
@@ -220,13 +247,41 @@ public class Bob extends Actor {
     
     public void animateRight()
     {
-        setImage(frame == 1 ? bob1 : bob2);
-        frame = frame == 1 ? 2 : 1;
+        if(frame == 1) {
+            setImage(bobwalk1right);
+            frame = 2;
+        }
+        else if(frame == 2) {
+            setImage(bobwalk2right);
+            frame = 3;
+        }
+        else if(frame == 3) {
+            setImage(bobwalk3right);
+            frame = 4;
+        }
+        else {
+            setImage(bobwalk4right);
+            frame = 1;
+        }
     }
     
     public void animateLeft()
     {
-        setImage(frame == 1 ? bob3 : bob4);
-        frame = frame == 1 ? 2 : 1;
+        if(frame == 1) {
+            setImage(bobwalk1left);
+            frame = 2;
+        }
+        else if(frame == 2) {
+            setImage(bobwalk2left);
+            frame = 3;
+        }
+        else if(frame == 3) {
+            setImage(bobwalk3left);
+            frame = 4;
+        }
+        else {
+            setImage(bobwalk4left);
+            frame = 1;
+        }
     }
 }

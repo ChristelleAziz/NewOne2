@@ -52,5 +52,3 @@ public class Meteorite2 extends BadGuys {
     }
     }
 }
-
-
