@@ -103,7 +103,7 @@ public int getScrollOffset() {
 
     private void respawnMinions() {
         int numMinions = getObjects(Minion.class).size();
-        int maxMinions = 2; 
+        int maxMinions = 4; 
 
         if (numMinions < maxMinions) {
             addMinions();
@@ -163,8 +163,8 @@ public int getScrollOffset() {
         backgroundMusic.stop();
     }
 
-    private void prepare() {
-        addPlanetBackground();
+private void prepare() {
+    addPlanetBackground();
         addKing();
         addMam();
         addCastle();
@@ -179,10 +179,33 @@ public int getScrollOffset() {
         addCoinsCounter();
         addKilledEnemiesCounter();
 }
+
+private void addLives() {
+        for (int i = 0; i < 5; i++) {
+            addObject(new Live(), 50 + i * 40, 50);
+        }
+    }
+    
+    private void addBulletsDisplayedFirst() {
+    for (int i = 0; i < 10; i++) {
+        addObject(new BulletDisplayed(), 40 + i * 20, 90);
+    }
+}
+    
     private void addClouds() {
         addObject(new Cloud(), 220, 160);
         addObject(new Cloud(), 690, 110);
     }
+    
+    private void addCoinsCounter() {
+    coinsCounter = new Label("Coins: 0");
+    addObject(coinsCounter, 860, 60);
+}
+
+private void addKilledEnemiesCounter() {
+    killedEnemiesCounter = new Label("Enemies Killed: 0");
+    addObject(killedEnemiesCounter, 860, 40);
+}
 
     private void addPlanetBackground() {
         addObject(new PlanetBackground(), 530, 610);
@@ -232,18 +255,6 @@ public int getScrollOffset() {
         addObject(new Minion(), getWidth() - 1, 615);
     }
 
-    private void addLives() {
-        for (int i = 0; i < 5; i++) {
-            addObject(new Live(), 50 + i * 40, 50);
-        }
-    }
-
-    private void addBulletsDisplayedFirst() {
-        for (int i = 0; i < 10; i++) {
-            addObject(new BulletDisplayed(), 40 + i * 20, 90);
-        }
-    }
-
     private void spawnCoins() {
         if (Greenfoot.getRandomNumber(1000) <= 2) {
             addObject(new Coin(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
@@ -254,15 +265,6 @@ public int getScrollOffset() {
         if (Greenfoot.getRandomNumber(1500) <= 2) {
             addObject(new BulletAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
-    }
-    
-    private void addCoinsCounter() {
-        coinsCounter = new Label("Coins: 0");
-        addObject(coinsCounter, 860, 60);
-    }
-    private void addKilledEnemiesCounter() {
-        killedEnemiesCounter = new Label("Enemies Killed: 0");
-        addObject(killedEnemiesCounter, 860, 40);
     }
 }
 

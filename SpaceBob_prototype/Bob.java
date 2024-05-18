@@ -40,7 +40,8 @@ public class Bob extends Actor {
     }
 
     private boolean isTouchingMeteorite() {
-        return !getObjectsInRange(50, Meteorite2.class).isEmpty();
+        return !getObjectsInRange(100, Meteorite2.class).isEmpty();
+        
     }
     
 private void handleMovement() {
