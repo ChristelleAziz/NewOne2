@@ -173,7 +173,6 @@ public int getScrollOffset() {
         addPlatforms();
         addPlanet();
         addSpikes();
-        addMinions();
         addBob();
         addLives();
         addBulletsDisplayedFirst();
@@ -221,7 +220,7 @@ public int getScrollOffset() {
     }
 
     private void addBob() {
-        addObject(new Bob(), 172, 491);
+        addObject(new Bob(), 110, 510);
     }
 
     private void addSpikes() {
