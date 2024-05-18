@@ -7,8 +7,7 @@ public class Level_1 extends Levels {
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
     private Label killedEnemiesCounter;
-    // private GreenfootImage meteorite4 = new GreenfootImage("test24.png");
-    private int meteoriteCounter = 0;
+    int meteoriteCounter = 0; 
 
     public Level_1() {    
         prepare();
@@ -22,9 +21,6 @@ public class Level_1 extends Levels {
         super.act();
         adjustActorPositions();
         minionAddedThisAct = false;
-
-        meteoriteCounter++;
-        
         spawnMeteorites();
         
         removeAndReplaceMeteorites();
@@ -41,30 +37,38 @@ private void removeAndReplaceMeteorites() {
     }
 
     for (Meteorite2 meteorite : meteoritesToRemove) {
-        // Get the position before removing the meteorite
+        
         int x = meteorite.getX();
         int y = meteorite.getY();
         
-        // Remove the meteorite from the world
         removeObject(meteorite);
         
-        // Add a new MeteoriteOnPlanet at the same position
-        addObject(new MeteoriteOnPlanet(), x, 620);
+        addObject(new MeteoriteOnPlanet(), x + 150, 620);
     }
 }
 
+private void spawnMeteorites() {
+    meteoriteCounter++;
+    if (meteoriteCounter % 100 == 0 && Greenfoot.getRandomNumber(100) < 40) {
+        int centerX = getWidth() / 2;
+        int spawnRange = getWidth() / 4;
+        int spawnX;
+
+        if (Greenfoot.getRandomNumber(2) == 0) {
+            // Générez spawnX davantage vers la droite pour les météorites se déplaçant vers la gauche
+            spawnX = Greenfoot.getRandomNumber(spawnRange * 110) + centerX + spawnRange;
+        } else {
+            // Génénez spawnX centré autour du centre de l'écran pour les météorites se déplaçant vers la droite
+            spawnX = Greenfoot.getRandomNumber(spawnRange) + centerX - spawnRange;
+        }
+        addObject(new Meteorite2(), spawnX, 0);
+    }
+}
+    
 public int getScrollOffset() {
         // You can return a constant scroll speed for simplicity
         // Replace 5 with your desired scroll speed value
         return 5;
-    }
-
-private void spawnMeteorites() {
-         meteoriteCounter++;
-        // Add a new meteorite every 100 acts (adjust as needed)
-        if (meteoriteCounter % 100 == 0 && Greenfoot.getRandomNumber(100) < 10) {
-            addObject(new Meteorite2(), Greenfoot.getRandomNumber(getWidth()), 0);
-        }
     }
 
     public String getCoinsCounterLabel() {
@@ -262,3 +266,4 @@ private void spawnMeteorites() {
         addObject(killedEnemiesCounter, 860, 40);
     }
 }
+
