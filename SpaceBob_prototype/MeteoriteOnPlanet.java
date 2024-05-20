@@ -2,7 +2,7 @@ import greenfoot.*;
 
 public class MeteoriteOnPlanet extends BadGuys {
     public MeteoriteOnPlanet() {
-        setImage("test40.png");
+        setImage("MeteoriteOnPlanet.png");
     }
 
     public void act() {
