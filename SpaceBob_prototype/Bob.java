@@ -12,7 +12,8 @@ public class Bob extends Actor {
     private int animationSpeed;
     private int frame = 1;
     private boolean doubleJumpAvailable = true;
-
+    private boolean canLoseLife = true;
+    
     private GreenfootImage bobwalk1right = new GreenfootImage("bob_walk1right.png");
     private GreenfootImage bobwalk2right = new GreenfootImage("bob_walk2right.png");
     private GreenfootImage bobwalk3right = new GreenfootImage("bob_walk3right.png");
@@ -198,13 +199,16 @@ private boolean onPlanet() {
     }
 
     private void loseLife() {
-        livesCount--;
-        removeLive();
-        if (livesCount == 0) {
-            getWorld().removeObject(this);
-            Greenfoot.setWorld(new Background2());
+        if (canLoseLife == true) {
+            livesCount--;
+            removeLive();
+            if (livesCount == 0) {
+                getWorld().removeObject(this);
+                Greenfoot.setWorld(new Background2());
+                Greenfoot.delay(5);
+            }
+            temporaryInvincibility(); 
         }
-        temporaryInvincibility();
     }
 
     private void temporaryInvincibility() {
@@ -215,8 +219,12 @@ private boolean onPlanet() {
             image.setTransparency(visible ? 0 : 255);
             visible = !visible;
             Greenfoot.delay(5);
+            canLoseLife = false;
         }
         image.setTransparency(255);
+        //if (System.currentTimeMillis() - startTime == 5000){ //Put a timer here to deactivate shield
+            canLoseLife = true;
+        //}
     }
 
     private void removeLive() {
