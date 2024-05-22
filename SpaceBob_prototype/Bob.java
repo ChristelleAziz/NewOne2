@@ -63,30 +63,28 @@ private void handleMovement() {
 }
 
     private void moveRight() {
-        move(3);
+        move(6);
         if(animationSpeed % 5 == 0)
         animateRight();
     }
 
     private void moveLeft() {
-        move(-5);
+        move(-3);
         if(animationSpeed % 5 == 0)
         animateLeft();
     }
     
 private void jump() {
     if (onPlatform() || onPlanet()) {
-        // Si Bob est sur une plateforme ou une planète
         verticalSpeed = jumpHeight;
         fall();
         playSound("jump10.wav");
-        doubleJumpAvailable = true; // Activer le double saut
+        doubleJumpAvailable = true;
     } else if (!onPlatform() && !onPlanet() && doubleJumpAvailable) {
-        // Si Bob n'est pas sur une plateforme ou une planète et que le double saut est disponible
         verticalSpeed = jumpHeight;
         fall();
         playSound("jump10.wav");
-        doubleJumpAvailable = false; // Désactiver le double saut après le saut initial
+        doubleJumpAvailable = false;
     }
 }
 
@@ -111,7 +109,7 @@ private void jump() {
 
     private void adjustWorldPosition() {
         for (Actor object : getWorld().getObjects(Actor.class)) {
-            if (object != this && !(object instanceof Live) && !(object instanceof BulletDisplayed)
+            if (!(object instanceof Live) && !(object instanceof BulletDisplayed)
                     && !(object instanceof PlanetBackground) && !(object instanceof Castle)
                     && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) && !(object instanceof Star)) {
                 object.move(-3);
@@ -123,7 +121,7 @@ private void fall() {
     setLocation(getX(), getY() + verticalSpeed);
     verticalSpeed += acceleration;
     if (onPlatform() || onPlanet()) {
-        doubleJumpAvailable = true; // Réinitialiser le double saut lorsque sur le sol
+        doubleJumpAvailable = true;
     }
 }
 
@@ -133,14 +131,14 @@ private void checkFalling() {
             fall();
         } else {
             verticalSpeed = 0;
-            doubleJumpAvailable = true; // Réactiver le double saut lorsque sur le sol
+            doubleJumpAvailable = true;
         }
     }
     
 private boolean onPlatform() {
     Platform platform = (Platform)getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
     boolean onPlatform = platform != null && getX() >= platform.getX() - platform.getImage().getWidth() / 2 &&
-        getX() <= platform.getX();
+    getX() <= platform.getX();
     return onPlatform;
 }
 
@@ -169,8 +167,7 @@ private boolean onPlanet() {
             } else if (getWorld() instanceof Level_5) {
                 ((Level_5) getWorld()).changeCoinsCounter(1);
             }
-            GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
-            pickupCoinSound.play();
+            playSound("pickupCoin.wav");
         }
     }
     private void collectBullet() {
@@ -188,9 +185,9 @@ private boolean onPlanet() {
         if (badGuy != null && !collisionDetected) {
             if (badGuy instanceof Minion || badGuy instanceof Spike || badGuy instanceof Meteorite2) {
                 if (isTouchingMinion() || isTouchingSpike() || isTouchingMeteorite()) {
+                    playSound("hurt.wav");
                     loseLife();
                     collisionDetected = true;
-                    playSound("hurt.wav");
                 }
             }
         } else if (badGuy == null) {
