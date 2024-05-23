@@ -16,6 +16,7 @@ public class Bob extends Actor {
     private boolean canLoseLife = true;
     private boolean canLoseArmor = true;
      private boolean isInvincible = false;
+      private boolean isJumping = true;
     private long lastAnimationTime = 0;
     private long lastCollisionCheckTime = 0;
 
@@ -85,8 +86,13 @@ public class Bob extends Actor {
         if (Greenfoot.isKeyDown("left") || Greenfoot.isKeyDown("a")) {
             moveLeft();
         }
-        if ((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w")) && (onPlatform() || onPlanet() || doubleJumpAvailable)) {
+        if ((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w")))
+        {
+            isJumping = true;
+        }
+        if ((isJumping && !(Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w"))) && (onPlatform() || onPlanet() || doubleJumpAvailable)) {
             jump();
+            isJumping = false;
             setImage(bobwalk3right);
         }
         if (bulletsCount > 0 && Greenfoot.mouseClicked(null)) {
@@ -108,13 +114,15 @@ public class Bob extends Actor {
             animateLeft();
     }
 
-    private void jump() {
+    private void jump() 
+    {
+        
         if (onPlatform() || onPlanet()) {
             verticalSpeed = jumpHeight;
             fall();
             playSound("jump10.wav");
             doubleJumpAvailable = true;
-        } else if (!onPlatform() && !onPlanet() && doubleJumpAvailable) {
+        } else if (doubleJumpAvailable) {
             verticalSpeed = jumpHeight;
             fall();
             playSound("jump10.wav");
@@ -124,6 +132,10 @@ public class Bob extends Actor {
 
 private void shootBullet() {
     // Get the mouse coordinates
+    if (Greenfoot.getMouseInfo() == null)
+    {
+        return;
+    }
     int mouseX = Greenfoot.getMouseInfo().getX();
     int mouseY = Greenfoot.getMouseInfo().getY();
 
