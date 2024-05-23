@@ -15,10 +15,12 @@ public class Bob extends Actor {
     private boolean doubleJumpAvailable = true;
     private boolean canLoseLife = true;
     private boolean canLoseArmor = true;
-     private boolean isInvincible = false;
-      private boolean isJumping = true;
+    private boolean isInvincible = false;
+    private boolean isJumping = true;
     private long lastAnimationTime = 0;
     private long lastCollisionCheckTime = 0;
+    private int coins = 0;
+    private World previousWorld;
 
     private GreenfootImage bobwalk1right = new GreenfootImage("bob_walk1right.png");
     private GreenfootImage bobwalk2right = new GreenfootImage("bob_walk2right.png");
@@ -58,6 +60,26 @@ public class Bob extends Actor {
         return this.simulationSpeed;
     }
     
+    //Begin Pearl + added private int coins and previousWorld
+    public int getCoins() {
+        return coins;
+    }
+
+    public void spendCoins(int amount) {
+        coins -= amount;
+    }
+
+    public void gainLife() {
+        livesCount++;
+    }
+
+    public World getPreviousWorld() {
+        return previousWorld;
+    }
+
+    //modified loseLife()
+    
+    //End Pearl
     private void checkCollisionIfNecessary() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastCollisionCheckTime >= 200) { // Vérifier la collision toutes les 200 millisecondes
@@ -274,14 +296,16 @@ private void decreaseBulletsCount() {
         
     }
     
-private void loseLife() {
+private void loseLife(){
     if (canLoseLife && !isInvincible) { // Check if Bob is not currently invincible
         livesCount--;
         removeLive();
         if (livesCount == 0) {
             getWorld().removeObject(this);
-            Greenfoot.setWorld(new Background2());
-            Greenfoot.delay(5);
+            previousWorld = getWorld();
+            Greenfoot.setWorld(new ExtraLifeWorld(this));
+            //Greenfoot.setWorld(new Background2());
+            //Greenfoot.delay(5);
         }
     }
 }
