@@ -14,7 +14,7 @@ public class Level_1 extends Levels {
         prepare();
         setupBackgroundMusic();
         // Set the paint order to ensure Bob is always in front
-        setPaintOrder(BulletDisplayed.class, CoinsCounter.class, Live.class, Label.class, Bob.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class, Minion.class /* other classes if necessary */);
+        setPaintOrder(BulletDisplayed.class, CoinsCounter.class, Live.class, Armor.class, Label.class, Bob.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class, Minion.class /* other classes if necessary */);
     }
 
     public void act() {
@@ -182,6 +182,7 @@ public class Level_1 extends Levels {
         addSpikes();
         addBob();
         addLives();
+        addArmors();
         addBulletsDisplayedFirst();
         addCoinsCounter();
         addKilledEnemiesCounter();
@@ -193,6 +194,12 @@ public class Level_1 extends Levels {
         }
     }
 
+    private void addArmors() {
+        for (int i = 0; i < 5; i++) {
+            addObject(new Armor(), 50 + i * 40, 130);
+        }
+    }
+    
     private void addBulletsDisplayedFirst() {
         for (int i = 0; i < 10; i++) {
             addObject(new BulletDisplayed(), 40 + i * 20, 90);

@@ -6,6 +6,7 @@ public class Bob extends Actor {
     private int acceleration = 1;
     private int jumpHeight = -20;
     private int livesCount = 5;
+    private int armorsCount = 5;
     private int bulletsCount = 10;
     private boolean isTouchingSpike2 = false;
     private boolean collisionDetected = false;
@@ -13,6 +14,8 @@ public class Bob extends Actor {
     private int frame = 1;
     private boolean doubleJumpAvailable = true;
     private boolean canLoseLife = true;
+    private boolean canLoseArmor = true;
+     private boolean isInvincible = false;
     private long lastAnimationTime = 0;
     private long lastCollisionCheckTime = 0;
 
@@ -26,6 +29,15 @@ public class Bob extends Actor {
     private GreenfootImage bobwalk3left = new GreenfootImage("bob_walk3left.png");
     private GreenfootImage bobwalk4left = new GreenfootImage("bob_walk4left.png");
     
+    private GreenfootImage bobwalk1left_with_armor = new GreenfootImage("bob_walk1left_with_armor.png");
+    private GreenfootImage bobwalk2left_with_armor = new GreenfootImage("bob_walk2left_with_armor.png");
+    private GreenfootImage bobwalk3left_with_armor = new GreenfootImage("bob_walk3left_with_armor.png");
+    private GreenfootImage bobwalk4left_with_armor = new GreenfootImage("bob_walk4left_with_armor.png");
+    
+    private GreenfootImage bobwalk1right_with_armor = new GreenfootImage("bob_walk1right_with_armor.png");
+    private GreenfootImage bobwalk2right_with_armor = new GreenfootImage("bob_walk2right_with_armor.png");
+    private GreenfootImage bobwalk3right_with_armor = new GreenfootImage("bob_walk3right_with_armor.png");
+    private GreenfootImage bobwalk4right_with_armor = new GreenfootImage("bob_walk4right_with_armor.png");
     public void act() {
         handleMovement();
         checkFalling();
@@ -132,7 +144,7 @@ public class Bob extends Actor {
         for (Actor object : getWorld().getObjects(Actor.class)) {
             if (!(object instanceof Live) && !(object instanceof BulletDisplayed)
                     && !(object instanceof PlanetBackground) && !(object instanceof Castle)
-                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) && !(object instanceof Star) && !(object instanceof decorPlanets)) {
+                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) && !(object instanceof Star) && !(object instanceof decorPlanets) && !(object instanceof Armor)) {
                 object.move(-3);
             }
         }
@@ -204,7 +216,11 @@ private void checkCollision() {
         if (badGuy instanceof Minion || badGuy instanceof Spike || badGuy instanceof Meteorite2) {
             if (isTouchingMinion() || isTouchingSpike() || isTouchingMeteorite()) {
                 playSound("hurt.wav");
-                loseLife();
+                if (armorsCount > 0) {
+                    loseArmor(); // Bob loses an armor if he has any remaining
+                } else {
+                    loseLife(); // Bob loses a life if he doesn't have any armor left
+                }
                 collisionDetected = true;
             }
         }
@@ -212,6 +228,7 @@ private void checkCollision() {
         collisionDetected = false;
     }
 }
+
 
 
  private boolean isTouchingMinion() {
@@ -229,7 +246,7 @@ private void checkCollision() {
     }
     
 private void loseLife() {
-    if (canLoseLife) {
+    if (canLoseLife && !isInvincible) { // Check if Bob is not currently invincible
         livesCount--;
         removeLive();
         if (livesCount == 0) {
@@ -237,28 +254,69 @@ private void loseLife() {
             Greenfoot.setWorld(new Background2());
             Greenfoot.delay(5);
         }
-        temporaryInvincibility();
     }
 }
 
-private void temporaryInvincibility() {
-    GreenfootImage image = getImage();
-    long startTime = System.currentTimeMillis();
-    boolean visible = true;
-    while (System.currentTimeMillis() - startTime < 1800) {
-        image.setTransparency(visible ? 0 : 255);
-        visible = !visible;
-        Greenfoot.delay(5);
-        canLoseLife = false;
+private void loseArmor() {
+    if (canLoseArmor) {
+        armorsCount--;
+        removeArmor();
+        temporaryInvincibility(); // Trigger temporary invincibility every time Bob loses an armor
+        if (armorsCount == 0) { // If Bob has lost all armors, disable invincibility
+            isInvincible = false;
+        }
     }
-    image.setTransparency(255);
-    canLoseLife = true;
+}
+
+
+private void temporaryInvincibility() {
+     if (!isInvincible) { // Check if Bob is not currently invincible
+        isInvincible = true; // Set Bob as invincible
+        GreenfootImage originalImage = getImage();
+        GreenfootImage armorImage = getArmorImage(originalImage); // Get the corresponding image with armor
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 1800) {
+            setImage(armorImage); // Set the image with armor
+            Greenfoot.delay(5);
+            setImage(originalImage); // Reset image back to the original after a delay
+            Greenfoot.delay(5);
+        }
+        isInvincible = false; // Reset invincibility after the duration
+    }
+}
+
+private GreenfootImage getArmorImage(GreenfootImage originalImage) {
+    // Determine which armor image corresponds to the original image of Bob
+    if (originalImage == bobwalk1right) {
+        return bobwalk1right_with_armor;
+    } else if (originalImage == bobwalk2right) {
+        return bobwalk2right_with_armor;
+    } else if (originalImage == bobwalk3right) {
+        return bobwalk3right_with_armor;
+    } else if (originalImage == bobwalk4right) {
+        return bobwalk4right_with_armor;
+    } else if (originalImage == bobwalk1left) {
+        return bobwalk1left_with_armor;
+    } else if (originalImage == bobwalk2left) {
+        return bobwalk2left_with_armor;
+    } else if (originalImage == bobwalk3left) {
+        return bobwalk3left_with_armor;
+    } else { // originalImage == bobwalk4left
+        return bobwalk4left_with_armor;
+    }
 }
 
 private void removeLive() {
     List<Live> hearts = getWorld().getObjects(Live.class);
     if (!hearts.isEmpty()) {
         getWorld().removeObject(hearts.get(hearts.size() - 1));
+    }
+}
+
+private void removeArmor() {
+    List<Armor> armors = getWorld().getObjects(Armor.class);
+    if (!armors.isEmpty()) {
+        getWorld().removeObject(armors.get(armors.size() - 1));
     }
 }
 
