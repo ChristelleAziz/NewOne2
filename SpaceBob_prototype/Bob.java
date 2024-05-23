@@ -122,17 +122,29 @@ public class Bob extends Actor {
         }
     }
 
-    private void shootBullet() {
-        getWorld().addObject(new Bullet(), getX(), getY());
-        playSound("shoot.wav");
-        bulletsCount--;
-        loseBulletDisplayed();
+private void shootBullet() {
+    // Get the mouse coordinates
+    int mouseX = Greenfoot.getMouseInfo().getX();
+    int mouseY = Greenfoot.getMouseInfo().getY();
 
-        Minion minion = (Minion) getOneIntersectingObject(Minion.class);
-        if (minion != null) {
-            getWorld().removeObject(minion);
-        }
-    }
+    // Calculate the angle between Bob's position and the mouse click position
+    double angle = Math.atan2(mouseY - getY(), mouseX - getX());
+
+    // Calculate the horizontal and vertical components of bullet velocity
+    int speed = 5; // Adjust bullet speed as needed
+    int dx = (int) (speed * Math.cos(angle));
+    int dy = (int) (speed * Math.sin(angle));
+
+    // Add the bullet with the computed velocity components
+    getWorld().addObject(new Bullet(dx, dy), getX(), getY());
+
+    bulletsCount--; // Réduire le nombre de balles ici
+    removeBulletDisplayed(); // Retirer une balle affichée
+
+    playSound("shoot.wav");
+}
+
+
 
     private void playSound(String filename) {
         GreenfootSound sound = new GreenfootSound(filename);
@@ -200,12 +212,13 @@ public class Bob extends Actor {
             playSound("pickupCoin.wav");
         }
     }
-    private void collectBullet() {
+private void collectBullet() {
     Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
     if (bulletAppearing != null) {
         getWorld().removeObject(bulletAppearing);
         bulletsCount++;
         addBulletDisplayed();
+        loseBulletDisplayed(); // Appelé uniquement lorsque le joueur collecte une balle
         playSound("pickupCoin.wav");
     }
 }
@@ -230,6 +243,10 @@ private void checkCollision() {
 }
 
 
+
+private void decreaseBulletsCount() {
+    bulletsCount--;
+}
 
  private boolean isTouchingMinion() {
         Minion minion = (Minion) getOneIntersectingObject(Minion.class);
@@ -322,7 +339,14 @@ private void removeArmor() {
 
 private void loseBulletDisplayed() {
     removeBulletDisplayed();
+    // Decrease the displayed bullets count
+    List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
+    if (!bulletsDisplayed.isEmpty()) {
+        // Remove the rightmost displayed bullet
+        getWorld().removeObject(bulletsDisplayed.get(bulletsDisplayed.size() - 1));
+    }
 }
+
 
 private void removeBulletDisplayed() {
     List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);

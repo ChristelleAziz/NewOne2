@@ -1,15 +1,14 @@
 #BlueJ class context
 comment0.target=Bullet
-comment1.params=
-comment1.target=Bullet()
+comment1.params=dx\ dy
+comment1.target=Bullet(int,\ int)
 comment2.params=
 comment2.target=void\ act()
 comment3.params=
 comment3.target=void\ moveBullet()
-comment3.text=\r\n\ Moves\ the\ bullet\ horizontally\ and\ removes\ it\ if\ it\ reaches\ the\ world\ edge.\r\n
 comment4.params=
 comment4.target=void\ checkCollision()
 comment4.text=\r\n\ Checks\ for\ collision\ with\ platforms,\ minions,\ or\ the\ world\ edge\ and\ removes\ the\ bullet\ accordingly.\r\n
 comment5.params=
-comment5.target=void\ levelUp()
+comment5.target=void\ updateRotation()
 numComments=6

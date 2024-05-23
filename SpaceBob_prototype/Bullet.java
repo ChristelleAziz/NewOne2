@@ -1,33 +1,27 @@
 import greenfoot.*;
 
 public class Bullet extends Actor {
-    private int speed = 20;
-    public static int killedEnemies = 0;
-    public static int level = 1;
+    private int dx;
+    private int dy;
 
-    public Bullet() {
+    public Bullet(int dx, int dy) {
+        this.dx = dx;
+        this.dy = dy;
         getImage().scale(getImage().getWidth() / 5, getImage().getHeight() / 5);
+        updateRotation();
     }
 
     public void act() {
         moveBullet();
         if (getWorld() != null) { // Check if the bullet is still in the world
-        checkCollision();
+            checkCollision();
         }
-        //resetLevel();
-        levelUp();
     }
 
-    /**
-     * Moves the bullet horizontally and removes it if it reaches the world edge.
-     */
     private void moveBullet() {
-        move(speed);
-
-        // Remove the bullet if it reaches the world edge
-        if (getX() >= getWorld().getWidth() - 1) {
+        setLocation(getX() + (dx * 5), getY() + (dy * 5));
+        if (isAtEdge()) {
             getWorld().removeObject(this);
-            return;
         }
     }
 
@@ -36,39 +30,36 @@ public class Bullet extends Actor {
      */
     private void checkCollision() {
         Actor wall = getOneIntersectingObject(Platform.class);
-        if (wall != null) {
-            getWorld().removeObject(this);
-            return;
-        }
-    
-        Actor minion = getOneIntersectingObject(Minion.class);
-        if (minion != null) {
-            Minion m = (Minion)minion;
-            m.handleCollision();
-            getWorld().removeObject(this);
-            killedEnemies++;
-            return;
-        }
-    }
-    //public void resetLevel() {
-        //if (object instanceof Bo == null) {
-         //   level = 1;
-        //}
-    //}
-    public void levelUp() {
-        if (killedEnemies == 1) {
-            if (level == 1) {
-                Greenfoot.setWorld(new Level_2());
-            } else if (level == 2) {
-                Greenfoot.setWorld(new Level_3());
-            } else if (level == 3) {
-                Greenfoot.setWorld(new Level_4());
-            } else {
-                Greenfoot.setWorld(new Level_5());
-            }
-            killedEnemies = 0; //reinitialise counter
-            level++;//increment level
-        }
+    if (wall != null) {
+        getWorld().removeObject(this);
+        return;
     }
     
+    Actor minion = getOneIntersectingObject(Minion.class);
+    if (minion != null) {
+        Minion m = (Minion) minion;
+        m.handleCollision();
+        getWorld().removeObject(this);
+        return;
+    }
+    
+    Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
+    if (bulletAppearing != null) {
+        getWorld().removeObject(bulletAppearing);
+        // Update the bullet count
+        return;
+    }
+    }
+
+private void updateRotation() {
+    // Calculate the rotation angle using trigonometry
+    double angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+    // Adjust the rotation angle to make it consistent with the coordinate system
+    double rotation = angle;
+
+    // Set the rotation of the bullet image
+    setRotation((int) rotation);
+}
+
 }
