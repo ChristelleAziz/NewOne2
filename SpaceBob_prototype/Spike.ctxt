@@ -2,10 +2,9 @@
 comment0.target=Spike
 comment1.params=
 comment1.target=void\ act()
+comment1.text=\r\n\ Act\ -\ Move\ the\ cloud\ horizontally\ and\ wrap\ around\ if\ it\ reaches\ the\ edge\ of\ the\ world.\r\n
 comment2.params=
-comment2.target=void\ moveAcrossWorld()
-comment2.text=\r\n\ Moves\ the\ spike\ across\ the\ world\ horizontally\ and\ wraps\ around\ if\ it\ reaches\ the\ edge.\r\n
+comment2.target=void\ moveIfAtWorldBoundaries()
 comment3.params=
-comment3.target=int\ getRandomYPosition()
-comment3.text=\r\n\ Gets\ a\ random\ Y\ position\ within\ a\ specified\ range.\r\n\ \r\n\ @return\ The\ random\ Y\ position.\r\n
+comment3.target=void\ moveSpikeToOppositeSide()
 numComments=4

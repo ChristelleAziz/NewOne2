@@ -13,7 +13,9 @@ public class Bob extends Actor {
     private int frame = 1;
     private boolean doubleJumpAvailable = true;
     private boolean canLoseLife = true;
-    
+    private long lastAnimationTime = 0;
+    private long lastCollisionCheckTime = 0;
+
     private GreenfootImage bobwalk1right = new GreenfootImage("bob_walk1right.png");
     private GreenfootImage bobwalk2right = new GreenfootImage("bob_walk2right.png");
     private GreenfootImage bobwalk3right = new GreenfootImage("bob_walk3right.png");
@@ -23,72 +25,92 @@ public class Bob extends Actor {
     private GreenfootImage bobwalk2left = new GreenfootImage("bob_walk2left.png");
     private GreenfootImage bobwalk3left = new GreenfootImage("bob_walk3left.png");
     private GreenfootImage bobwalk4left = new GreenfootImage("bob_walk4left.png");
+    
     public void act() {
         handleMovement();
         checkFalling();
         collectItems();
         adjustWorldPosition();
-        checkCollision();
+        animateIfNecessary();
+        checkCollisionIfNecessary();
     }
 
-    private boolean isTouchingMinion() {
-        Minion minion = (Minion) getOneIntersectingObject(Minion.class);
-        return minion != null && getX() < minion.getX();
-    }
-    
-    private boolean isTouchingSpike() {
-        return !getObjectsInRange(50, Spike.class).isEmpty();
+     private double simulationSpeed = 1.0; // Défaut: vitesse de simulation normale
+
+    public void setSimulationSpeed(double speed) {
+        this.simulationSpeed = speed;
     }
 
-    private boolean isTouchingMeteorite() {
-        return !getObjectsInRange(100, Meteorite2.class).isEmpty();
-        
+    public double getSimulationSpeed() {
+        return this.simulationSpeed;
     }
     
-private void handleMovement() {
-    animationSpeed = animationSpeed + 1;
-    if (Greenfoot.isKeyDown("right") || Greenfoot.isKeyDown("d")) {
-        moveRight();
+    private void checkCollisionIfNecessary() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastCollisionCheckTime >= 200) { // Vérifier la collision toutes les 200 millisecondes
+            checkCollision();
+            lastCollisionCheckTime = currentTime;
+        }
     }
-    if (Greenfoot.isKeyDown("left") || Greenfoot.isKeyDown("a")) {
-        moveLeft();
+
+    private void animateIfNecessary() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastAnimationTime >= 100) { // Changer d'image toutes les 100 millisecondes
+            if (Greenfoot.isKeyDown("right") || Greenfoot.isKeyDown("d")) {
+                animateRight();
+            } else if (Greenfoot.isKeyDown("left") || Greenfoot.isKeyDown("a")) {
+                animateLeft();
+            }
+            lastAnimationTime = currentTime;
+        }
     }
-    if ((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w")) && (onPlatform() || onPlanet() || doubleJumpAvailable)) {
-        jump();
-        setImage(bobwalk3right);
+
+    private void handleMovement() {
+        animationSpeed = animationSpeed + 1;
+        if (Greenfoot.isKeyDown("right") || Greenfoot.isKeyDown("d")) {
+            moveRight();
+        }
+        if (Greenfoot.isKeyDown("left") || Greenfoot.isKeyDown("a")) {
+            moveLeft();
+        }
+        if ((Greenfoot.isKeyDown("space") || Greenfoot.isKeyDown("w")) && (onPlatform() || onPlanet() || doubleJumpAvailable)) {
+            jump();
+            setImage(bobwalk3right);
+        }
+        if (bulletsCount > 0 && Greenfoot.mouseClicked(null)) {
+            shootBullet();
+        }
     }
-    if (bulletsCount > 0 && Greenfoot.mouseClicked(null)) {
-        shootBullet();
-    }
-}
 
     private void moveRight() {
-        move(6);
-        if(animationSpeed % 5 == 0)
-        animateRight();
+        int delta = (int) (7 * getSimulationSpeed()); // 10 peut être ajusté selon la vitesse désirée
+        move(delta);
+        if (animationSpeed % 500 == 0)
+            animateRight();
     }
 
     private void moveLeft() {
-        move(-3);
-        if(animationSpeed % 5 == 0)
-        animateLeft();
+        int delta = (int) (-4 * getSimulationSpeed()); // -3 peut être ajusté selon la vitesse désirée
+        move(delta);
+        if (animationSpeed % 500 == 0)
+            animateLeft();
     }
-    
-private void jump() {
-    if (onPlatform() || onPlanet()) {
-        verticalSpeed = jumpHeight;
-        fall();
-        playSound("jump10.wav");
-        doubleJumpAvailable = true;
-    } else if (!onPlatform() && !onPlanet() && doubleJumpAvailable) {
-        verticalSpeed = jumpHeight;
-        fall();
-        playSound("jump10.wav");
-        doubleJumpAvailable = false;
-    }
-}
 
-        private void shootBullet() {
+    private void jump() {
+        if (onPlatform() || onPlanet()) {
+            verticalSpeed = jumpHeight;
+            fall();
+            playSound("jump10.wav");
+            doubleJumpAvailable = true;
+        } else if (!onPlatform() && !onPlanet() && doubleJumpAvailable) {
+            verticalSpeed = jumpHeight;
+            fall();
+            playSound("jump10.wav");
+            doubleJumpAvailable = false;
+        }
+    }
+
+    private void shootBullet() {
         getWorld().addObject(new Bullet(), getX(), getY());
         playSound("shoot.wav");
         bulletsCount--;
@@ -99,34 +121,32 @@ private void jump() {
             getWorld().removeObject(minion);
         }
     }
-    
-    
-        private void playSound(String filename) {
-            GreenfootSound sound = new GreenfootSound(filename);
-            sound.setVolume(70);
-            sound.play();
-        }
+
+    private void playSound(String filename) {
+        GreenfootSound sound = new GreenfootSound(filename);
+        sound.setVolume(70);
+        sound.play();
+    }
 
     private void adjustWorldPosition() {
         for (Actor object : getWorld().getObjects(Actor.class)) {
             if (!(object instanceof Live) && !(object instanceof BulletDisplayed)
                     && !(object instanceof PlanetBackground) && !(object instanceof Castle)
-                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) && !(object instanceof Star)) {
+                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) && !(object instanceof Star) && !(object instanceof decorPlanets)) {
                 object.move(-3);
             }
         }
     }
-    
-private void fall() {
-    setLocation(getX(), getY() + verticalSpeed);
-    verticalSpeed += acceleration;
-    if (onPlatform() || onPlanet()) {
-        doubleJumpAvailable = true;
+
+    private void fall() {
+        setLocation(getX(), getY() + verticalSpeed);
+        verticalSpeed += acceleration;
+        if (onPlatform() || onPlanet()) {
+            doubleJumpAvailable = true;
+        }
     }
-}
 
-
-private void checkFalling() {
+    private void checkFalling() {
         if (!onPlatform() && !onPlanet()) {
             fall();
         } else {
@@ -134,18 +154,16 @@ private void checkFalling() {
             doubleJumpAvailable = true;
         }
     }
-    
-private boolean onPlatform() {
-    Platform platform = (Platform)getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
-    boolean onPlatform = platform != null && getX() >= platform.getX() - platform.getImage().getWidth() / 2 &&
-    getX() <= platform.getX();
-    return onPlatform;
-}
 
-private boolean onPlanet() {
-    boolean onPlanet = getOneObjectAtOffset(0, getImage().getHeight() / 2, Planet.class) != null;
-    return onPlanet;
-}
+    private boolean onPlatform() {
+        Platform platform = (Platform)getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
+        return platform != null && getX() >= platform.getX() - platform.getImage().getWidth() / 2 &&
+                getX() <= platform.getX();
+    }
+
+    private boolean onPlanet() {
+        return getOneObjectAtOffset(0, getImage().getHeight() / 2, Planet.class) != null;
+    }
 
     private void collectItems() {
         collectCoin();
@@ -171,123 +189,128 @@ private boolean onPlanet() {
         }
     }
     private void collectBullet() {
-        Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
-        if (bulletAppearing != null) {
-            getWorld().removeObject(bulletAppearing);
-            bulletsCount++;
-            addBulletDisplayed();
-            playSound("pickupCoin.wav");
-        }
+    Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
+    if (bulletAppearing != null) {
+        getWorld().removeObject(bulletAppearing);
+        bulletsCount++;
+        addBulletDisplayed();
+        playSound("pickupCoin.wav");
     }
+}
 
-    private void checkCollision() {
-        Actor badGuy = getOneIntersectingObject(BadGuys.class);
-        if (badGuy != null && !collisionDetected) {
-            if (badGuy instanceof Minion || badGuy instanceof Spike || badGuy instanceof Meteorite2) {
-                if (isTouchingMinion() || isTouchingSpike() || isTouchingMeteorite()) {
-                    playSound("hurt.wav");
-                    loseLife();
-                    collisionDetected = true;
-                }
+private void checkCollision() {
+    Actor badGuy = getOneIntersectingObject(BadGuys.class);
+    if (badGuy != null && !collisionDetected) {
+        if (badGuy instanceof Minion || badGuy instanceof Spike || badGuy instanceof Meteorite2) {
+            if (isTouchingMinion() || isTouchingSpike() || isTouchingMeteorite()) {
+                playSound("hurt.wav");
+                loseLife();
+                collisionDetected = true;
             }
-        } else if (badGuy == null) {
-            collisionDetected = false;
         }
+    } else if (badGuy == null) {
+        collisionDetected = false;
+    }
+}
+
+
+ private boolean isTouchingMinion() {
+        Minion minion = (Minion) getOneIntersectingObject(Minion.class);
+        return minion != null && getX() < minion.getX();
+    }
+    
+    private boolean isTouchingSpike() {
+        return !getObjectsInRange(50, Spike.class).isEmpty();
     }
 
-    private void loseLife() {
-        if (canLoseLife == true) {
-            livesCount--;
-            removeLive();
-            if (livesCount == 0) {
-                getWorld().removeObject(this);
-                Greenfoot.setWorld(new Background2());
-                Greenfoot.delay(5);
-            }
-            temporaryInvincibility(); 
-        }
+    private boolean isTouchingMeteorite() {
+        return !getObjectsInRange(100, Meteorite2.class).isEmpty();
+        
     }
-
-    private void temporaryInvincibility() {
-        GreenfootImage image = getImage();
-        long startTime = System.currentTimeMillis();
-        boolean visible = true;
-        while (System.currentTimeMillis() - startTime < 1800) {
-            image.setTransparency(visible ? 0 : 255);
-            visible = !visible;
+    
+private void loseLife() {
+    if (canLoseLife) {
+        livesCount--;
+        removeLive();
+        if (livesCount == 0) {
+            getWorld().removeObject(this);
+            Greenfoot.setWorld(new Background2());
             Greenfoot.delay(5);
-            canLoseLife = false;
         }
-        image.setTransparency(255);
-        //if (System.currentTimeMillis() - startTime == 5000){ //Put a timer here to deactivate shield
-            canLoseLife = true;
-        //}
+        temporaryInvincibility();
     }
+}
 
-    private void removeLive() {
-        List<Live> hearts = getWorld().getObjects(Live.class);
-        if (!hearts.isEmpty()) {
-            getWorld().removeObject(hearts.get(hearts.size() - 1));
-        }
+private void temporaryInvincibility() {
+    GreenfootImage image = getImage();
+    long startTime = System.currentTimeMillis();
+    boolean visible = true;
+    while (System.currentTimeMillis() - startTime < 1800) {
+        image.setTransparency(visible ? 0 : 255);
+        visible = !visible;
+        Greenfoot.delay(5);
+        canLoseLife = false;
     }
+    image.setTransparency(255);
+    canLoseLife = true;
+}
 
-    private void loseBulletDisplayed() {
-        removeBulletDisplayed();
+private void removeLive() {
+    List<Live> hearts = getWorld().getObjects(Live.class);
+    if (!hearts.isEmpty()) {
+        getWorld().removeObject(hearts.get(hearts.size() - 1));
     }
+}
 
-    private void removeBulletDisplayed() {
-        List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
-        if (!bulletsDisplayed.isEmpty()) {
-            getWorld().removeObject(bulletsDisplayed.get(bulletsDisplayed.size() - 1));
-        }
-    }
+private void loseBulletDisplayed() {
+    removeBulletDisplayed();
+}
 
-    private void addBulletDisplayed() {
-        List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
-        if (bulletsDisplayed.size() < 10) {
-            int newX = 40 + bulletsDisplayed.size() * 20;
-            BulletDisplayed newBullet = new BulletDisplayed();
-            getWorld().addObject(newBullet, newX, 90);
-        }
+private void removeBulletDisplayed() {
+    List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
+    if (!bulletsDisplayed.isEmpty()) {
+        getWorld().removeObject(bulletsDisplayed.get(bulletsDisplayed.size() - 1));
     }
-    
-    public void animateRight()
-    {
-        if(frame == 1) {
-            setImage(bobwalk1right);
-            frame = 2;
-        }
-        else if(frame == 2) {
-            setImage(bobwalk2right);
-            frame = 3;
-        }
-        else if(frame == 3) {
-            setImage(bobwalk3right);
-            frame = 4;
-        }
-        else {
-            setImage(bobwalk4right);
-            frame = 1;
-        }
+}
+
+private void addBulletDisplayed() {
+    List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
+    if (bulletsDisplayed.size() < 10) {
+        int newX = 40 + bulletsDisplayed.size() * 20;
+        BulletDisplayed newBullet = new BulletDisplayed();
+        getWorld().addObject(newBullet, newX, 90);
     }
-    
-    public void animateLeft()
-    {
-        if(frame == 1) {
-            setImage(bobwalk1left);
-            frame = 2;
-        }
-        else if(frame == 2) {
-            setImage(bobwalk2left);
-            frame = 3;
-        }
-        else if(frame == 3) {
-            setImage(bobwalk3left);
-            frame = 4;
-        }
-        else {
-            setImage(bobwalk4left);
-            frame = 1;
-        }
+}
+
+public void animateRight() {
+    if (frame == 1) {
+        setImage(bobwalk1right);
+        frame = 2;
+    } else if (frame == 2) {
+        setImage(bobwalk2right);
+        frame = 3;
+    } else if (frame == 3) {
+        setImage(bobwalk3right);
+        frame = 4;
+    } else {
+        setImage(bobwalk4right);
+        frame = 1;
     }
+}
+
+public void animateLeft() {
+    if (frame == 1) {
+        setImage(bobwalk1left);
+        frame = 2;
+    } else if (frame == 2) {
+        setImage(bobwalk2left);
+        frame = 3;
+    } else if (frame == 3) {
+        setImage(bobwalk3left);
+        frame = 4;
+    } else {
+        setImage(bobwalk4left);
+        frame = 1;
+    }
+}
 }

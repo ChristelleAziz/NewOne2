@@ -7,14 +7,17 @@ public class Level_1 extends Levels {
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
     private Label killedEnemiesCounter;
+    private Label coinsCounter;
     int meteoriteCounter = 0; 
 
     public Level_1() {    
         prepare();
         setupBackgroundMusic();
+        // Set the paint order to ensure Bob is always in front
+        setPaintOrder(BulletDisplayed.class, CoinsCounter.class, Live.class, Label.class, Bob.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class, Minion.class /* other classes if necessary */);
     }
 
-     public void act() {
+    public void act() {
         spawnCoins();
         spawnBullets();
         checkMinionRespawn();
@@ -26,46 +29,46 @@ public class Level_1 extends Levels {
         removeAndReplaceMeteorites();
     }
 
-private void removeAndReplaceMeteorites() {
-    List<Meteorite2> meteoritesToRemove = new ArrayList<>();
-    List<Meteorite2> meteorites = getObjects(Meteorite2.class);
+    private void removeAndReplaceMeteorites() {
+        List<Meteorite2> meteoritesToRemove = new ArrayList<>();
+        List<Meteorite2> meteorites = getObjects(Meteorite2.class);
 
-    for (Meteorite2 meteorite : meteorites) {
-        if (meteorite.shouldRemove()) {
-            meteoritesToRemove.add(meteorite);
+        for (Meteorite2 meteorite : meteorites) {
+            if (meteorite.shouldRemove()) {
+                meteoritesToRemove.add(meteorite);
+            }
+        }
+
+        for (Meteorite2 meteorite : meteoritesToRemove) {
+            int x = meteorite.getX();
+            int y = meteorite.getY();
+
+            removeObject(meteorite);
+
+            // Add the new MeteoriteOnPlanet at the exact same position where Meteorite2 was
+            addObject(new MeteoriteOnPlanet(), x + 120, y + 30);
         }
     }
 
-    for (Meteorite2 meteorite : meteoritesToRemove) {
-        
-        int x = meteorite.getX();
-        int y = meteorite.getY();
-        
-        removeObject(meteorite);
-        
-        addObject(new MeteoriteOnPlanet(), x + 150, 620);
-    }
-}
+    private void spawnMeteorites() {
+        meteoriteCounter++;
+        if (meteoriteCounter % 100 == 0 && Greenfoot.getRandomNumber(100) < 40) {
+            int centerX = getWidth() / 2;
+            int spawnRange = getWidth() / 4;
+            int spawnX;
 
-private void spawnMeteorites() {
-    meteoriteCounter++;
-    if (meteoriteCounter % 100 == 0 && Greenfoot.getRandomNumber(100) < 40) {
-        int centerX = getWidth() / 2;
-        int spawnRange = getWidth() / 4;
-        int spawnX;
-
-        if (Greenfoot.getRandomNumber(2) == 0) {
-            // Générez spawnX davantage vers la droite pour les météorites se déplaçant vers la gauche
-            spawnX = Greenfoot.getRandomNumber(spawnRange * 110) + centerX + spawnRange;
-        } else {
-            // Génénez spawnX centré autour du centre de l'écran pour les météorites se déplaçant vers la droite
-            spawnX = Greenfoot.getRandomNumber(spawnRange) + centerX - spawnRange;
+            if (Greenfoot.getRandomNumber(2) == 0) {
+                // Generate spawnX further to the right for meteorites moving to the left
+                spawnX = Greenfoot.getRandomNumber(spawnRange * 2) + centerX + spawnRange;
+            } else {
+                // Generate spawnX centered around the middle of the screen for meteorites moving to the right
+                spawnX = Greenfoot.getRandomNumber(spawnRange) + centerX - spawnRange;
+            }
+            addObject(new Meteorite2(), spawnX, 0);
         }
-        addObject(new Meteorite2(), spawnX, 0);
     }
-}
-    
-public int getScrollOffset() {
+
+    public int getScrollOffset() {
         // You can return a constant scroll speed for simplicity
         // Replace 5 with your desired scroll speed value
         return 5;
@@ -98,7 +101,7 @@ public int getScrollOffset() {
         String scoreStr = labelText.substring(index + 2);
         int score = Integer.parseInt(scoreStr);
         int newScore = score + num;
-        coinsCounter.setLabel("Enemies Killed: " + newScore);
+        killedEnemiesCounter.setLabel("Enemies Killed: " + newScore);
     }
 
     private void respawnMinions() {
@@ -163,8 +166,12 @@ public int getScrollOffset() {
         backgroundMusic.stop();
     }
 
-private void prepare() {
-    addPlanetBackground();
+    private void prepare() {
+        addPlanetBackground();
+        addPlanet6();
+        addPlanet5();
+        addPlanet1();
+        addPlanet2();
         addKing();
         addMam();
         addCastle();
@@ -178,39 +185,59 @@ private void prepare() {
         addBulletsDisplayedFirst();
         addCoinsCounter();
         addKilledEnemiesCounter();
-}
+    }
 
-private void addLives() {
+    private void addLives() {
         for (int i = 0; i < 5; i++) {
             addObject(new Live(), 50 + i * 40, 50);
         }
     }
-    
+
     private void addBulletsDisplayedFirst() {
-    for (int i = 0; i < 10; i++) {
-        addObject(new BulletDisplayed(), 40 + i * 20, 90);
+        for (int i = 0; i < 10; i++) {
+            addObject(new BulletDisplayed(), 40 + i * 20, 90);
+        }
     }
-}
-    
+
     private void addClouds() {
         addObject(new Cloud(), 220, 160);
         addObject(new Cloud(), 690, 110);
     }
-    
-    private void addCoinsCounter() {
-    coinsCounter = new Label("Coins: 0");
-    addObject(coinsCounter, 860, 60);
-}
 
-private void addKilledEnemiesCounter() {
-    killedEnemiesCounter = new Label("Enemies Killed: 0");
-    addObject(killedEnemiesCounter, 860, 40);
-}
+    private void addCoinsCounter() {
+        coinsCounter = new Label("Coins: 0");
+        addObject(coinsCounter, 860, 60);
+    }
+
+    private void addKilledEnemiesCounter() {
+        killedEnemiesCounter = new Label("Enemies Killed: 0");
+        addObject(killedEnemiesCounter, 860, 40);
+    }
 
     private void addPlanetBackground() {
         addObject(new PlanetBackground(), 530, 610);
     }
 
+    private void addPlanet6() {
+        addObject(new Planet6(), 836, 124);
+    }
+    
+    private void addPlanet5() {
+        addObject(new Planet5(), 170, 400);
+    }
+    
+    private void addPlanet1() {
+        addObject(new Planet1(), 620, 440);
+    }
+    
+    private void addPlanet2() {
+        addObject(new Planet2(), 417, 180);
+    }
+    
+    private void addPlanet4() {
+        addObject(new Planet5(), 170, 400);
+    }
+    
     private void addCastle() {
         addObject(new Castle(), 523, 533);
     }
@@ -247,7 +274,7 @@ private void addKilledEnemiesCounter() {
     }
 
     private void addSpikes() {
-        addObject(new Spike(), 184, 626);
+        addObject(new Spike(), 500, 626);
         addObject(new Spike(), 925, 626);
     }
 
@@ -267,4 +294,3 @@ private void addKilledEnemiesCounter() {
         }
     }
 }
-
