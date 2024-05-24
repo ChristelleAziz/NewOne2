@@ -7,18 +7,19 @@ public class Level_1 extends Levels {
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
     private Label killedEnemiesCounter;
-    private Label coinsCounter;
+    //private Label coinsCounter;
     int meteoriteCounter = 0; 
-    private int level = 1;;
+    private int level = 1;
+    public static int coinsAmount = 0;
 
     public Level_1() {    
         prepare();
         setupBackgroundMusic();;
         // Set the paint order to ensure Bob is always in front
-        setPaintOrder(BulletDisplayed.class, CoinsCounter.class, Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
+        setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
         Bob bob = new Bob();
-        Label coinsCounter = new Label("Coins: 0"); // Example initialization
-        bob.setCoinsCounter(coinsCounter);
+        //Label coinsCounter = new Label("Coins: 0"); // Example initialization
+        //bob.setCoinsCounter(coinsCounter);
     }
 
     public void act() {
@@ -30,6 +31,7 @@ public class Level_1 extends Levels {
         minionAddedThisAct = false;
         spawnMeteorites();
         removeAndReplaceMeteorites();
+        showText("Coins: " + coinsAmount, 860, 75);
     }
 
     private int getEnemiesRequiredForLevelUp() {
@@ -84,9 +86,9 @@ public class Level_1 extends Levels {
         return 5;
     }
 
-    public String getCoinsCounterLabel() {
-        return coinsCounter.getText();
-    }
+    //public String getCoinsCounterLabel() {
+    //    return coinsCounter.getText();
+    //}
     
     public void setKilledEnemiesCounterLabel(String text) {
         killedEnemiesCounter.setText(text);
@@ -185,7 +187,7 @@ public class Level_1 extends Levels {
         addLives();
         addArmors();
         addBulletsDisplayedFirst();
-        addCoinsCounter();
+        //addCoinsCounter();
         addKilledEnemiesCounter();
     }
 
@@ -213,10 +215,10 @@ public class Level_1 extends Levels {
         addObject(new Cloud(), 690, 110);
     }
 
-    private void addCoinsCounter() {
-        coinsCounter = new Label("Coins: 0");
-        addObject(coinsCounter, 860, 60);
-    }
+    //private void addCoinsCounter() {
+    //    coinsCounter = new Label("Coins: 0");
+    //    addObject(coinsCounter, 860, 60);
+    //}
 
     private void addKilledEnemiesCounter() {
         killedEnemiesCounter = new Label("Enemies Killed: 0");
@@ -297,10 +299,10 @@ public class Level_1 extends Levels {
         }
     }
     
-     public void changeCoinsCounter(int amount) {
-        GameStats.addCoins(amount);
-        coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected());
-    }
+    //public void changeCoinsCounter(int amount) {
+    //    GameStats.addCoins(amount);
+    //    coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected());
+    //}
 
     private void spawnBullets() {
         if (Greenfoot.getRandomNumber(1500) <= 2) {

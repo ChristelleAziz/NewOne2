@@ -2,6 +2,7 @@ import greenfoot.*;
 import java.util.List;
 
 public class Bob extends Actor {
+    Level_1 thisGame;
     private int verticalSpeed = 0;
     private int acceleration = 1;
     private int jumpHeight = -20;
@@ -186,12 +187,13 @@ public class Bob extends Actor {
         Actor coin = getOneIntersectingObject(Coin.class);
         if (coin != null) {
             getWorld().removeObject(coin);
-            GameStats.addCoins(1); // Increment coin count using GameStats
-            if (coinsCounter != null) {
-                coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected()); // Update the coins counter label
-            }
-            GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
-            pickupCoinSound.play();
+            thisGame.coinsAmount++;
+    //        GameStats.addCoins(1); // Increment coin count using GameStats
+    //        if (coinsCounter != null) {
+    //            coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected()); // Update the coins counter label
+    //        }
+    //        GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
+    //        pickupCoinSound.play();
         }
     }
     
@@ -283,7 +285,7 @@ private void checkCollision() {
                 if (armorsCount > 0) {
                     loseArmor(); // Bob loses an armor if he has any remaining
                 } else {
-                    bob.loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
+                    //bob.loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
                 }
                 collisionDetected = true;
             }
