@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=GameStats
+comment0.text=\r\n\ Constructor\ for\ objects\ of\ class\ GameStats.\r\n\ \r\n
+comment1.params=
+comment1.target=int\ getCoinsCollected()
+comment2.params=coins
+comment2.target=void\ setCoinsCollected(int)
+comment3.params=coins
+comment3.target=void\ addCoins(int)
+numComments=4

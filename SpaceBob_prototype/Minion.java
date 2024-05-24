@@ -45,8 +45,7 @@ public class Minion extends BadGuys {
     }
     
     public void handleCollision() {
-        //killedEnemies++;
-        //getWorld().removeObject(this); // Remove the minion from the world
+        getWorld().removeObject(this); // Remove the minion from the world
     }
     
     private void spawnReplacementMinion() {

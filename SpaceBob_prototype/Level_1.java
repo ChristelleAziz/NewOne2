@@ -9,12 +9,16 @@ public class Level_1 extends Levels {
     private Label killedEnemiesCounter;
     private Label coinsCounter;
     int meteoriteCounter = 0; 
+    private int level = 1;;
 
     public Level_1() {    
         prepare();
-        setupBackgroundMusic();
+        setupBackgroundMusic();;
         // Set the paint order to ensure Bob is always in front
         setPaintOrder(BulletDisplayed.class, CoinsCounter.class, Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
+        Bob bob = new Bob();
+        Label coinsCounter = new Label("Coins: 0"); // Example initialization
+        bob.setCoinsCounter(coinsCounter);
     }
 
     public void act() {
@@ -25,10 +29,16 @@ public class Level_1 extends Levels {
         adjustActorPositions();
         minionAddedThisAct = false;
         spawnMeteorites();
-        
         removeAndReplaceMeteorites();
     }
 
+    private int getEnemiesRequiredForLevelUp() {
+        // Define your logic for how many enemies are required to level up
+        // For example, return 1 for level 1, 5 for level 2, and so on
+        return level * 5;
+    }
+
+    
     private void removeAndReplaceMeteorites() {
         List<Meteorite2> meteoritesToRemove = new ArrayList<>();
         List<Meteorite2> meteorites = getObjects(Meteorite2.class);
@@ -76,15 +86,6 @@ public class Level_1 extends Levels {
 
     public String getCoinsCounterLabel() {
         return coinsCounter.getText();
-    }
-    
-    public void changeCoinsCounter(int amount) {
-        String labelText = coinsCounter.getLabel();
-        int index = labelText.indexOf(":");
-        String scoreStr = labelText.substring(index + 2);
-        int score = Integer.parseInt(scoreStr);
-        int newScore = score + amount;
-        coinsCounter.setLabel("Coins: " + newScore);
     }
     
     public void setKilledEnemiesCounterLabel(String text) {
@@ -294,6 +295,11 @@ public class Level_1 extends Levels {
         if (Greenfoot.getRandomNumber(1000) <= 2) {
             addObject(new Coin(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
+    }
+    
+     public void changeCoinsCounter(int amount) {
+        GameStats.addCoins(amount);
+        coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected());
     }
 
     private void spawnBullets() {

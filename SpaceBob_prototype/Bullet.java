@@ -3,7 +3,10 @@ import greenfoot.*;
 public class Bullet extends Actor {
     private int dx;
     private int dy;
-
+    
+     public static int killedEnemies = 0;
+    public static int level = 1;
+    
     public Bullet(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
@@ -11,11 +14,13 @@ public class Bullet extends Actor {
         updateRotation();
     }
 
-    public void act() {
+   public void act() {
         moveBullet();
         if (getWorld() != null) { // Check if the bullet is still in the world
-            checkCollision();
+        checkCollision();
         }
+        //resetLevel();
+        levelUp();
     }
 
     private void moveBullet() {
@@ -39,7 +44,8 @@ public class Bullet extends Actor {
     if (minion != null) {
         Minion m = (Minion) minion;
         m.handleCollision();
-        getWorld().removeObject(this);
+        //getWorld().removeObject(this);
+        killedEnemies++;
         return;
     }
     
@@ -49,6 +55,37 @@ public class Bullet extends Actor {
         // Update the bullet count
         return;
     }
+}
+
+public void levelUp() {
+        if (killedEnemies == 2) {
+            if (level == 1) {
+                Greenfoot.setWorld(new Level_2());
+                killedEnemies = 0;
+                level++;
+            }
+        }
+        if (killedEnemies == 4) {
+            if (level == 2) {
+                Greenfoot.setWorld(new Level_3());
+                killedEnemies = 0;
+                level++;
+            }
+        }
+        if (killedEnemies == 6) {
+            if (level == 3) {
+                Greenfoot.setWorld(new Level_4());
+                killedEnemies = 0;
+                level++;
+            }
+        }
+        if (killedEnemies == 8) {
+            if (level == 4) {
+                Greenfoot.setWorld(new Level_5());
+                killedEnemies = 0;
+                level++;
+            }
+        }
 }
 
 private void updateRotation() {

@@ -21,6 +21,7 @@ public class Bob extends Actor {
     private long lastCollisionCheckTime = 0;
     private int coins = 0;
     private World previousWorld;
+    private Label coinsCounter;
 
     private GreenfootImage bobwalk1right = new GreenfootImage("bob_walk1right.png");
     private GreenfootImage bobwalk2right = new GreenfootImage("bob_walk2right.png");
@@ -179,6 +180,27 @@ public class Bob extends Actor {
     }
 }
 
+ private void collectCoin() {
+        Actor coin = getOneIntersectingObject(Coin.class);
+        if (coin != null) {
+            getWorld().removeObject(coin);
+            GameStats.addCoins(1); // Increment coin count using GameStats
+            if (coinsCounter != null) {
+                coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected()); // Update the coins counter label
+            }
+            GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
+            pickupCoinSound.play();
+        }
+    }
+    
+    public Label getCoinsCounter() {
+        return coinsCounter;
+    }
+
+    public void setCoinsCounter(Label coinsCounter) {
+        this.coinsCounter = coinsCounter;
+    }
+    
     private void playSound(String filename) {
         GreenfootSound sound = new GreenfootSound(filename);
         sound.setVolume(70);
@@ -227,24 +249,6 @@ public class Bob extends Actor {
         collectBullet();
     }
 
-     private void collectCoin() {
-        Actor coin = getOneIntersectingObject(Coin.class);
-        if (coin != null) {
-            getWorld().removeObject(coin);
-            if (getWorld() instanceof Level_1) {
-                ((Level_1) getWorld()).changeCoinsCounter(1);
-            } else if (getWorld() instanceof Level_2) {
-                ((Level_2) getWorld()).changeCoinsCounter(1);
-            } else if (getWorld() instanceof Level_3) {
-                ((Level_3) getWorld()).changeCoinsCounter(1);
-            } else if (getWorld() instanceof Level_4) {
-                ((Level_4) getWorld()).changeCoinsCounter(1);
-            } else if (getWorld() instanceof Level_5) {
-                ((Level_5) getWorld()).changeCoinsCounter(1);
-            }
-            playSound("pickupCoin.wav");
-        }
-    }
 private void collectBullet() {
     Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
     if (bulletAppearing != null && bulletsCount < 10) {
@@ -442,6 +446,7 @@ public void animateRight() {
     } else {
         setImage(bobwalk4right);
         frame = 1;
+        
     }
 }
 
