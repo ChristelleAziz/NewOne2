@@ -23,12 +23,8 @@ public class GuideButton extends Actor
         }
 
         if (Greenfoot.mouseClicked(this)) {
-
-            Display display = new Display();
-            getWorld().addObject(display , 280, 500);
-            display.setImage(new GreenfootImage("You have selected Guide ",
-            48, Color.WHITE, Color.BLACK, Color.BLUE));
-
+            Greenfoot.delay(20);
+            Greenfoot.setWorld(new GuideWorld());
         }
     }
 }
