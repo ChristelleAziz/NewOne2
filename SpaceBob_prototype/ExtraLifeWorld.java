@@ -12,11 +12,11 @@ public class ExtraLifeWorld extends World {
     
     public void act() {
         if (Greenfoot.isKeyDown("y") && bob.getCoins() >= 10) {
-        bob.spendCoins(10);
-        bob.gainLife();
-        Greenfoot.setWorld(bob.getPreviousWorld());
-        } else if (Greenfoot.isKeyDown("n") || bob.getCoins() < 10) {
-        Greenfoot.setWorld(new Background2());
+            bob.spendCoins(10);
+            bob.gainLife();
+            Greenfoot.setWorld(bob.getPreviousWorld());
+            } else if (Greenfoot.isKeyDown("n") || bob.getCoins() < 10) {
+            Greenfoot.setWorld(new Background2());
         }
     }
 }
