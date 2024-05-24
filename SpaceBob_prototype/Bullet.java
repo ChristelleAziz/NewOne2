@@ -1,12 +1,12 @@
 import greenfoot.*;
 
 public class Bullet extends Actor {
-    Level_1 thisGame;
+    Levels thisGame;
+    
     private int dx;
     private int dy;
-    
-     public static int enemiesLeft = 2;
-    public static int level = 1;
+    public static int enemiesLeft = 2;
+    //public static int level = 1;
     
     public Bullet(int dx, int dy) {
         this.dx = dx;
@@ -20,8 +20,6 @@ public class Bullet extends Actor {
         if (getWorld() != null) { // Check if the bullet is still in the world
         checkCollision();
         }
-        //resetLevel();
-        levelUp();
     }
 
     private void moveBullet() {
@@ -57,33 +55,6 @@ public class Bullet extends Actor {
             return;
         }
     }
-
-    public void levelUp() {
-        if (enemiesLeft == 0) {
-            if (level == 1) {
-                Greenfoot.setWorld(new Level_2());
-                enemiesLeft = 0;
-                level++;
-            } else if (level == 2) {
-                Greenfoot.setWorld(new Level_3());
-                enemiesLeft = 0;
-                level++;
-            }
-        if (enemiesLeft == 6) {
-            if (level == 3) {
-                Greenfoot.setWorld(new Level_4());
-                enemiesLeft = 0;
-                level++;
-            }
-        }
-        if (enemiesLeft == 8) {
-            if (level == 4) {
-                Greenfoot.setWorld(new Level_5());
-                enemiesLeft = 0;
-                level++;
-            }
-        }
-    }}
 
 private void updateRotation() {
     // Calculate the rotation angle using trigonometry

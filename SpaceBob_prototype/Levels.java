@@ -13,6 +13,8 @@ public class Levels extends World
      * Constructor for objects of class Levels.
      * 
      */
+    public static int coinsAmount = 0;
+    public static int enemiesLeft = 2;
     public Levels()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.

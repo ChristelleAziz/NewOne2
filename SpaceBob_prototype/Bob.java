@@ -2,8 +2,8 @@ import greenfoot.*;
 import java.util.List;
 
 public class Bob extends Actor {
-    Level_1 thisGame;
-    
+    Levels thisGame;
+
     private int verticalSpeed = 0;
     private int acceleration = 1;
     private int jumpHeight = -20;
@@ -21,12 +21,13 @@ public class Bob extends Actor {
     private boolean isJumping = true;
     private long lastAnimationTime = 0;
     private long lastCollisionCheckTime = 0;
-    private int coins = 0;
-    private int leftEnemies = 0;//
+    //private int coins = 0;
+    //private int leftEnemies = 0;
     private World previousWorld;
-    private Label coinsCounter;
-    private Label enemiesToKillCounter;//
-
+    //private Label coinsCounter;
+    // Label enemiesToKillCounter;
+    public static int level = 1;
+    
     private GreenfootImage bobwalk1right = new GreenfootImage("bob_walk1right.png");
     private GreenfootImage bobwalk2right = new GreenfootImage("bob_walk2right.png");
     private GreenfootImage bobwalk3right = new GreenfootImage("bob_walk3right.png");
@@ -53,6 +54,32 @@ public class Bob extends Actor {
         adjustWorldPosition();
         animateIfNecessary();
         checkCollisionIfNecessary();
+        levelUp();
+    }
+    
+    public void levelUp() {
+        if (thisGame.enemiesLeft <= 0) {
+            if (level == 1) {
+                Greenfoot.setWorld(new Level_2());
+                thisGame.enemiesLeft = 4;
+            } else if (level == 2) {
+                Greenfoot.setWorld(new Level_3());
+                thisGame.enemiesLeft = 6;
+            }
+            if (thisGame.enemiesLeft == 6) {
+                if (level == 3) {
+                    Greenfoot.setWorld(new Level_4());
+                    thisGame.enemiesLeft = 8;
+                }
+            }
+            if (thisGame.enemiesLeft == 8) {
+                if (level == 4) {
+                    Greenfoot.setWorld(new Level_5());
+                    thisGame.enemiesLeft = 10;
+                }
+            }
+            level++;
+        }
     }
 
     private double simulationSpeed = 1.0; // Défaut: vitesse de simulation normale
@@ -66,21 +93,21 @@ public class Bob extends Actor {
     }
     
     //Begin Pearl + added private int coins and previousWorld
-    public int getCoins() {
-        return coins;
-    }
+    //public int getCoins() {
+    //    return coins;
+    //}
 
-    public void spendCoins(int amount) {
-        coins -= amount;
-    }
+    //public void spendCoins(int amount) {
+    //    coins -= amount;
+    //}
 
-    public void gainLife() {
-        livesCount++;
-    }
+    //public void gainLife() {
+    //    livesCount++;
+    //}
 
-    public World getPreviousWorld() {
-        return previousWorld;
-    }
+    //public World getPreviousWorld() {
+    //    return previousWorld;
+    //}
 
     //modified loseLife()
     
@@ -157,32 +184,32 @@ public class Bob extends Actor {
         }
     }
 
- private void shootBullet() {
-    if (bulletsCount > 0) {  // Vérifier s'il reste des munitions
-        if (Greenfoot.getMouseInfo() == null) {
-            return;
+    private void shootBullet() {
+        if (bulletsCount > 0) {  // Vérifier s'il reste des munitions
+            if (Greenfoot.getMouseInfo() == null) {
+                  return;
+            }
+            int mouseX = Greenfoot.getMouseInfo().getX();
+            int mouseY = Greenfoot.getMouseInfo().getY();
+            double angle = Math.atan2(mouseY - getY(), mouseX - getX());
+            int speed = 5;
+            int dx = (int) (speed * Math.cos(angle));
+            int dy = (int) (speed * Math.sin(angle));
+
+            // Change Bob's image based on the shooting direction
+            if (mouseX > getX()) {
+                setImage(getRightFacingImage());
+            } else {
+                setImage(getLeftFacingImage());
+            }
+
+            getWorld().addObject(new Bullet(dx, dy), getX(), getY());
+
+            bulletsCount--;  // Réduire le nombre de balles ici
+            removeBulletDisplayed();  // Retirer une balle affichée
+            playSound("shoot.wav");
         }
-        int mouseX = Greenfoot.getMouseInfo().getX();
-        int mouseY = Greenfoot.getMouseInfo().getY();
-        double angle = Math.atan2(mouseY - getY(), mouseX - getX());
-        int speed = 5;
-        int dx = (int) (speed * Math.cos(angle));
-        int dy = (int) (speed * Math.sin(angle));
-
-        // Change Bob's image based on the shooting direction
-        if (mouseX > getX()) {
-            setImage(getRightFacingImage());
-        } else {
-            setImage(getLeftFacingImage());
-        }
-
-        getWorld().addObject(new Bullet(dx, dy), getX(), getY());
-
-        bulletsCount--;  // Réduire le nombre de balles ici
-        removeBulletDisplayed();  // Retirer une balle affichée
-        playSound("shoot.wav");
     }
-}
 
     private void collectCoin() {
         Actor coin = getOneIntersectingObject(Coin.class);
@@ -198,13 +225,12 @@ public class Bob extends Actor {
         }
     }
     
-    public Label getCoinsCounter() {
-        return coinsCounter;
-    }
-
-    public void setCoinsCounter(Label coinsCounter) {
-        this.coinsCounter = coinsCounter;
-    }
+    //public Label getCoinsCounter() {
+    //    return coinsCounter;
+    //}
+    //public void setCoinsCounter(Label coinsCounter) {
+    //    this.coinsCounter = coinsCounter;
+    //}
     
     private void playSound(String filename) {
         GreenfootSound sound = new GreenfootSound(filename);
@@ -254,43 +280,43 @@ public class Bob extends Actor {
         collectBullet();
     }
 
-private void collectBullet() {
-    Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
-    if (bulletAppearing != null && bulletsCount < 10) {
-        bulletsCount++;
-        addBulletDisplayed();
-        playSound("pickupCoin.wav");
-    }
-    getWorld().removeObject(bulletAppearing);
-}
-
-
-private void checkCollision() {
-    Actor badGuy = getOneIntersectingObject(BadGuys.class);
-    if (badGuy != null && !collisionDetected) {
-        if (badGuy instanceof Minion || badGuy instanceof Spike || badGuy instanceof Meteorite2) {
-            if (isTouchingMinion() || isTouchingSpike() || isTouchingMeteorite()) {
-                playSound("hurt.wav");
-                if (armorsCount > 0) {
-                    loseArmor(); // Bob loses an armor if he has any remaining
-                } else {
-                    //loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
-                }
-                collisionDetected = true;
-            }
+    private void collectBullet() {
+        Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
+        if (bulletAppearing != null && bulletsCount < 10) {
+            bulletsCount++;
+            addBulletDisplayed();
+            playSound("pickupCoin.wav");
         }
-    } else if (badGuy == null) {
-        collisionDetected = false;
+        getWorld().removeObject(bulletAppearing);
     }
-}
+
+
+    private void checkCollision() {
+        Actor badGuy = getOneIntersectingObject(BadGuys.class);
+        if (badGuy != null && !collisionDetected) {
+            if (badGuy instanceof Minion || badGuy instanceof Spike || badGuy instanceof Meteorite2) {
+                if (isTouchingMinion() || isTouchingSpike() || isTouchingMeteorite()) {
+                    playSound("hurt.wav");
+                    if (armorsCount > 0) {
+                        loseArmor(); // Bob loses an armor if he has any remaining
+                    } else {
+                        //loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
+                    }
+                    collisionDetected = true;
+                }
+            }
+        } else if (badGuy == null) {
+            collisionDetected = false;
+        }
+    }
 
 
 
-private void decreaseBulletsCount() {
-    bulletsCount--;
-}
+    private void decreaseBulletsCount() {
+        bulletsCount--;
+    }
 
- private boolean isTouchingMinion() {
+    private boolean isTouchingMinion() {
         Minion minion = (Minion) getOneIntersectingObject(Minion.class);
         return minion != null && getX() < minion.getX();
     }
@@ -304,170 +330,170 @@ private void decreaseBulletsCount() {
         
     }
     
-private void loseLife(CoinManager coinManager){
-    if (canLoseLife && !isInvincible) { // Check if Bob is not currently invincible
-        livesCount--;
-        removeLive();
-        if (livesCount <= 0) {
-            getWorld().removeObject(this);
-            previousWorld = getWorld();
-            Greenfoot.setWorld(new ExtraLifeWorld(this, coinManager));
-            //Greenfoot.setWorld(new Background2());
-            //Greenfoot.delay(5);
+    private void loseLife(CoinManager coinManager){
+        if (canLoseLife && !isInvincible) { // Check if Bob is not currently invincible
+            livesCount--;
+            removeLive();
+            if (livesCount <= 0) {
+                getWorld().removeObject(this);
+                previousWorld = getWorld();
+                Greenfoot.setWorld(new ExtraLifeWorld(this, coinManager));
+                //Greenfoot.setWorld(new Background2());
+                //Greenfoot.delay(5);
+            }
         }
     }
-}
 
-private void loseArmor() {
-    if (canLoseArmor) {
-        armorsCount--;
-        removeArmor();
-        temporaryInvincibility(); // Trigger temporary invincibility every time Bob loses an armor
-        if (armorsCount == 0) { // If Bob has lost all armors, disable invincibility
-            isInvincible = false;
+    private void loseArmor() {
+        if (canLoseArmor) {
+            armorsCount--;
+            removeArmor();
+            temporaryInvincibility(); // Trigger temporary invincibility every time Bob loses an armor
+            if (armorsCount == 0) { // If Bob has lost all armors, disable invincibility
+                isInvincible = false;
+            }
         }
     }
-}
 
 
-private void temporaryInvincibility() {
-     if (!isInvincible) { // Check if Bob is not currently invincible
-        isInvincible = true; // Set Bob as invincible
+    private void temporaryInvincibility() {
+         if (!isInvincible) { // Check if Bob is not currently invincible
+            isInvincible = true; // Set Bob as invincible
+            GreenfootImage originalImage = getImage();
+                GreenfootImage armorImage = getArmorImage(originalImage); // Get the corresponding image with armor
+            long startTime = System.currentTimeMillis();
+            while (System.currentTimeMillis() - startTime < 1800) {
+                setImage(armorImage); // Set the image with armor
+                Greenfoot.delay(5);
+                setImage(originalImage); // Reset image back to the original after a delay
+                Greenfoot.delay(5);
+            }
+            isInvincible = false; // Reset invincibility after the duration
+        }
+    }
+
+    private GreenfootImage getArmorImage(GreenfootImage originalImage) {
+        // Determine which armor image corresponds to the original image of Bob
+        if (originalImage == bobwalk1right) {
+            return bobwalk1right_with_armor;
+        } else if (originalImage == bobwalk2right) {
+            return bobwalk2right_with_armor;
+        } else if (originalImage == bobwalk3right) {
+            return bobwalk3right_with_armor;
+        } else if (originalImage == bobwalk4right) {
+            return bobwalk4right_with_armor;
+        } else if (originalImage == bobwalk1left) {
+            return bobwalk1left_with_armor;
+        } else if (originalImage == bobwalk2left) {
+            return bobwalk2left_with_armor;
+        } else if (originalImage == bobwalk3left) {
+            return bobwalk3left_with_armor;
+        } else { // originalImage == bobwalk4left
+            return bobwalk4left_with_armor;
+        }
+    }
+
+    private GreenfootImage getRightFacingImage() {
         GreenfootImage originalImage = getImage();
-        GreenfootImage armorImage = getArmorImage(originalImage); // Get the corresponding image with armor
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < 1800) {
-            setImage(armorImage); // Set the image with armor
-            Greenfoot.delay(5);
-            setImage(originalImage); // Reset image back to the original after a delay
-            Greenfoot.delay(5);
+        // Determine which right-facing image corresponds to the original image of Bob
+        if (originalImage == bobwalk1left) {
+            return bobwalk1right;
+        } else if (originalImage == bobwalk2left) {
+            return bobwalk2right;
+        } else if (originalImage == bobwalk3left) {
+            return bobwalk3right;
+        } else { // originalImage == bobwalk4left
+            return bobwalk4right;
         }
-        isInvincible = false; // Reset invincibility after the duration
     }
-}
 
-private GreenfootImage getArmorImage(GreenfootImage originalImage) {
-    // Determine which armor image corresponds to the original image of Bob
-    if (originalImage == bobwalk1right) {
-        return bobwalk1right_with_armor;
-    } else if (originalImage == bobwalk2right) {
-        return bobwalk2right_with_armor;
-    } else if (originalImage == bobwalk3right) {
-        return bobwalk3right_with_armor;
-    } else if (originalImage == bobwalk4right) {
-        return bobwalk4right_with_armor;
-    } else if (originalImage == bobwalk1left) {
-        return bobwalk1left_with_armor;
-    } else if (originalImage == bobwalk2left) {
-        return bobwalk2left_with_armor;
-    } else if (originalImage == bobwalk3left) {
-        return bobwalk3left_with_armor;
-    } else { // originalImage == bobwalk4left
-        return bobwalk4left_with_armor;
+    private GreenfootImage getLeftFacingImage() {
+        GreenfootImage originalImage = getImage();
+        // Determine which left-facing image corresponds to the original image of Bob
+        if (originalImage == bobwalk1right) {
+            return bobwalk1left;
+        } else if (originalImage == bobwalk2right) {
+            return bobwalk2left;
+        } else if (originalImage == bobwalk3right) {
+            return bobwalk3left;
+        } else { // originalImage == bobwalk4right
+            return bobwalk4left;
+        }
     }
-}
 
-private GreenfootImage getRightFacingImage() {
-    GreenfootImage originalImage = getImage();
-    // Determine which right-facing image corresponds to the original image of Bob
-    if (originalImage == bobwalk1left) {
-        return bobwalk1right;
-    } else if (originalImage == bobwalk2left) {
-        return bobwalk2right;
-    } else if (originalImage == bobwalk3left) {
-        return bobwalk3right;
-    } else { // originalImage == bobwalk4left
-        return bobwalk4right;
+    private void removeLive() {
+        List<Live> hearts = getWorld().getObjects(Live.class);
+        if (!hearts.isEmpty()) {
+            getWorld().removeObject(hearts.get(hearts.size() - 1));
+        }
     }
-}
 
-private GreenfootImage getLeftFacingImage() {
-    GreenfootImage originalImage = getImage();
-    // Determine which left-facing image corresponds to the original image of Bob
-    if (originalImage == bobwalk1right) {
-        return bobwalk1left;
-    } else if (originalImage == bobwalk2right) {
-        return bobwalk2left;
-    } else if (originalImage == bobwalk3right) {
-        return bobwalk3left;
-    } else { // originalImage == bobwalk4right
-        return bobwalk4left;
+    private void removeArmor() {
+        List<Armor> armors = getWorld().getObjects(Armor.class);
+        if (!armors.isEmpty()) {
+            getWorld().removeObject(armors.get(armors.size() - 1));
+        }
     }
-}
 
-private void removeLive() {
-    List<Live> hearts = getWorld().getObjects(Live.class);
-    if (!hearts.isEmpty()) {
-        getWorld().removeObject(hearts.get(hearts.size() - 1));
+    private void loseBulletDisplayed() {
+        removeBulletDisplayed();
+        // Decrease the displayed bullets count
+        List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
+        if (!bulletsDisplayed.isEmpty()) {
+            // Remove the rightmost displayed bullet
+            getWorld().removeObject(bulletsDisplayed.get(bulletsDisplayed.size() - 1));
+        }
     }
-}
 
-private void removeArmor() {
-    List<Armor> armors = getWorld().getObjects(Armor.class);
-    if (!armors.isEmpty()) {
-        getWorld().removeObject(armors.get(armors.size() - 1));
+
+    private void removeBulletDisplayed() {
+        List<BulletDisplayed> bullets = getWorld().getObjects(BulletDisplayed.class);
+        if (!bullets.isEmpty()) {
+            BulletDisplayed bullet = bullets.get(bullets.size() - 1); // Retirer le dernier ajouté
+            getWorld().removeObject(bullet);
+        }
     }
-}
 
-private void loseBulletDisplayed() {
-    removeBulletDisplayed();
-    // Decrease the displayed bullets count
-    List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
-    if (!bulletsDisplayed.isEmpty()) {
-        // Remove the rightmost displayed bullet
-        getWorld().removeObject(bulletsDisplayed.get(bulletsDisplayed.size() - 1));
+    private void addBulletDisplayed() {
+        List<BulletDisplayed> bullets = getWorld().getObjects(BulletDisplayed.class);
+        if (bullets.size() < 10) {
+            int x = 40 + bullets.size() * 20;
+            int y = 90;
+            getWorld().addObject(new BulletDisplayed(), x, y);
+        }
     }
-}
 
 
-private void removeBulletDisplayed() {
-    List<BulletDisplayed> bullets = getWorld().getObjects(BulletDisplayed.class);
-    if (!bullets.isEmpty()) {
-        BulletDisplayed bullet = bullets.get(bullets.size() - 1); // Retirer le dernier ajouté
-        getWorld().removeObject(bullet);
+    public void animateRight() {
+        if (frame == 1) {
+            setImage(bobwalk1right);
+            frame = 2;
+        } else if (frame == 2) {
+            setImage(bobwalk2right);
+            frame = 3;
+        } else if (frame == 3) {
+            setImage(bobwalk3right);
+            frame = 4;
+        } else {
+            setImage(bobwalk4right);
+            frame = 1;
+            
+        }
+    }   
+
+    public void animateLeft() {
+        if (frame == 1) {
+            setImage(bobwalk1left);
+            frame = 2;
+        } else if (frame == 2) {
+            setImage(bobwalk2left);
+            frame = 3;
+        } else if (frame == 3) {
+            setImage(bobwalk3left);
+            frame = 4;
+        } else {
+            setImage(bobwalk4left);
+            frame = 1;
+        }
     }
-}
-
-private void addBulletDisplayed() {
-    List<BulletDisplayed> bullets = getWorld().getObjects(BulletDisplayed.class);
-    if (bullets.size() < 10) {
-        int x = 40 + bullets.size() * 20;
-        int y = 90;
-        getWorld().addObject(new BulletDisplayed(), x, y);
-    }
-}
-
-
-public void animateRight() {
-    if (frame == 1) {
-        setImage(bobwalk1right);
-        frame = 2;
-    } else if (frame == 2) {
-        setImage(bobwalk2right);
-        frame = 3;
-    } else if (frame == 3) {
-        setImage(bobwalk3right);
-        frame = 4;
-    } else {
-        setImage(bobwalk4right);
-        frame = 1;
-        
-    }
-}
-
-public void animateLeft() {
-    if (frame == 1) {
-        setImage(bobwalk1left);
-        frame = 2;
-    } else if (frame == 2) {
-        setImage(bobwalk2left);
-        frame = 3;
-    } else if (frame == 3) {
-        setImage(bobwalk3left);
-        frame = 4;
-    } else {
-        setImage(bobwalk4left);
-        frame = 1;
-    }
-}
 }

@@ -3,17 +3,18 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Level_1 extends Levels {
+    Levels thisGame;
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
     //private Label killedEnemiesCounter;
     //private Label coinsCounter;
     int meteoriteCounter = 0; 
-    private int level = 1;
-    public static int coinsAmount = 0;
-    public static int enemiesLeft = 2;
+    //private int level = 1;
+    //public static int coinsAmount = 0;
+   // public static int enemiesLeft = 2;
 
-    public Level_1() {    
+    public Level_1() {
         prepare();
         setupBackgroundMusic();;
         // Set the paint order to ensure Bob is always in front
@@ -32,15 +33,15 @@ public class Level_1 extends Levels {
         minionAddedThisAct = false;
         spawnMeteorites();
         removeAndReplaceMeteorites();
-        showText("Coins: " + coinsAmount, 860, 75);
-        showText("Enemies Left: " + enemiesLeft, 860, 40);
+        showText("Coins: " + thisGame.coinsAmount, 860, 75);
+        showText("Enemies Left: " + thisGame.enemiesLeft, 860, 40);
     }
 
-    private int getEnemiesRequiredForLevelUp() {
+    //private int getEnemiesRequiredForLevelUp() {
         // Define your logic for how many enemies are required to level up
         // For example, return 1 for level 1, 5 for level 2, and so on
-        return level * 5;
-    }
+    //    return level * 5;
+    //}
 
     
     private void removeAndReplaceMeteorites() {

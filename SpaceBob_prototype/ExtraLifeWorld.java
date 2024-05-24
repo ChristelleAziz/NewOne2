@@ -15,8 +15,8 @@ public class ExtraLifeWorld extends World {
         if (Greenfoot.isKeyDown("y")) {
             if (coinManager.getCoins() >= 10) {
                 coinManager.spendCoins(10);
-                bob.gainLife();
-                Greenfoot.setWorld(bob.getPreviousWorld());
+                //bob.gainLife();
+                //Greenfoot.setWorld(bob.getPreviousWorld());
             } else {
                 showText("Not enough coins! ", 300, 250);
             }
