@@ -20,9 +20,7 @@ public class Dialogue1 extends World
     }
     public void act()
     {
-        if(Greenfoot.isKeyDown("space"))
-        {
-            Greenfoot.setWorld(new Dialogue2());
-        }
+        Greenfoot.delay(100);
+        Greenfoot.setWorld(new Dialogue2());
     }
 }

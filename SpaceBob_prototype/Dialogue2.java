@@ -20,9 +20,7 @@ public class Dialogue2 extends World
     }
     public void act()
     {
-        if(Greenfoot.isKeyDown("space"))
-        {
-            Greenfoot.setWorld(new SplashScreen());
-        }
+        Greenfoot.delay(120);
+        Greenfoot.setWorld(new Menu());
     }
 }
