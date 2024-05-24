@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=CoinManager
+comment1.params=
+comment1.target=int\ getCoins()
+comment2.params=amount
+comment2.target=void\ spendCoins(int)
+comment3.params=amount
+comment3.target=void\ addCoins(int)
+comment4.params=
+comment4.target=void\ act()
+numComments=5

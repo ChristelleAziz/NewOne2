@@ -4,7 +4,7 @@ public class Bullet extends Actor {
     private int dx;
     private int dy;
     
-     public static int killedEnemies = 0;
+     public static int enemiesLeft = 2;
     public static int level = 1;
     
     public Bullet(int dx, int dy) {
@@ -14,7 +14,7 @@ public class Bullet extends Actor {
         updateRotation();
     }
 
-   public void act() {
+    public void act() {
         moveBullet();
         if (getWorld() != null) { // Check if the bullet is still in the world
         checkCollision();
@@ -35,58 +35,54 @@ public class Bullet extends Actor {
      */
     private void checkCollision() {
         Actor wall = getOneIntersectingObject(Platform.class);
-    if (wall != null) {
-        getWorld().removeObject(this);
-        return;
-    }
+        if (wall != null) {
+            getWorld().removeObject(this);
+            return;
+        }
     
-    Actor minion = getOneIntersectingObject(Minion.class);
-    if (minion != null) {
-        Minion m = (Minion) minion;
-        m.handleCollision();
-        //getWorld().removeObject(this);
-        killedEnemies++;
-        return;
-    }
+        Actor minion = getOneIntersectingObject(Minion.class);
+        if (minion != null) {
+            Minion m = (Minion) minion;
+            m.handleCollision();
+            //getWorld().removeObject(this);
+            enemiesLeft--;
+            return;
+        }
     
-    Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
-    if (bulletAppearing != null) {
-        getWorld().removeObject(bulletAppearing);
-        // Update the bullet count
-        return;
+        Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
+        if (bulletAppearing != null) {
+            getWorld().removeObject(bulletAppearing);
+            // Update the bullet count
+            return;
+        }
     }
-}
 
-public void levelUp() {
-        if (killedEnemies == 2) {
+    public void levelUp() {
+        if (enemiesLeft == 0) {
             if (level == 1) {
                 Greenfoot.setWorld(new Level_2());
-                killedEnemies = 0;
+                enemiesLeft = 0;
                 level++;
-            }
-        }
-        if (killedEnemies == 4) {
-            if (level == 2) {
+            } else if (level == 2) {
                 Greenfoot.setWorld(new Level_3());
-                killedEnemies = 0;
+                enemiesLeft = 0;
                 level++;
             }
-        }
-        if (killedEnemies == 6) {
+        if (enemiesLeft == 6) {
             if (level == 3) {
                 Greenfoot.setWorld(new Level_4());
-                killedEnemies = 0;
+                enemiesLeft = 0;
                 level++;
             }
         }
-        if (killedEnemies == 8) {
+        if (enemiesLeft == 8) {
             if (level == 4) {
                 Greenfoot.setWorld(new Level_5());
-                killedEnemies = 0;
+                enemiesLeft = 0;
                 level++;
             }
         }
-}
+    }}
 
 private void updateRotation() {
     // Calculate the rotation angle using trigonometry

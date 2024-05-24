@@ -283,7 +283,7 @@ private void checkCollision() {
                 if (armorsCount > 0) {
                     loseArmor(); // Bob loses an armor if he has any remaining
                 } else {
-                    loseLife(); // Bob loses a life if he doesn't have any armor left
+                    bob.loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
                 }
                 collisionDetected = true;
             }
@@ -313,14 +313,14 @@ private void decreaseBulletsCount() {
         
     }
     
-private void loseLife(){
+private void loseLife(CoinManager coinManager){
     if (canLoseLife && !isInvincible) { // Check if Bob is not currently invincible
         livesCount--;
         removeLive();
-        if (livesCount == 0) {
+        if (livesCount <= 0) {
             getWorld().removeObject(this);
             previousWorld = getWorld();
-            Greenfoot.setWorld(new ExtraLifeWorld(this));
+            Greenfoot.setWorld(new ExtraLifeWorld(this, coinManager));
             //Greenfoot.setWorld(new Background2());
             //Greenfoot.delay(5);
         }
