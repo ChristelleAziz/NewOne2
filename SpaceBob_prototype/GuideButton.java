@@ -14,6 +14,21 @@ public class GuideButton extends Actor
      */
     public void act()
     {
-        // Add your action code here.
+        if (Greenfoot.mouseMoved(this)) {
+            setImage("Menu_Guide_Highlighted.png");
+        }
+
+        if (Greenfoot.mouseMoved(getWorld())) {
+            setImage("Menu_Guide.png");
+        }
+
+        if (Greenfoot.mouseClicked(this)) {
+
+            Display display = new Display();
+            getWorld().addObject(display , 280, 500);
+            display.setImage(new GreenfootImage("You have selected Guide ",
+            48, Color.WHITE, Color.BLACK, Color.BLUE));
+
+        }
     }
 }
