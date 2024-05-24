@@ -14,6 +14,17 @@ public class GuideButton extends Actor
      */
     public void act()
     {
-        // Add your action code here.
+        if (Greenfoot.mouseMoved(this)) {
+            setImage("Menu_Guide_Highlighted.png");
+        }
+
+        if (Greenfoot.mouseMoved(getWorld())) {
+            setImage("Menu_Guide.png");
+        }
+
+        if (Greenfoot.mouseClicked(this)) {
+            Greenfoot.delay(20);
+            Greenfoot.setWorld(new GuideWorld());
+        }
     }
 }

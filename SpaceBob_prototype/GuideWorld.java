@@ -6,13 +6,13 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class SplashScreen extends World
+public class GuideWorld extends World
 {
     /**
      * Constructor for objects of class SplashScreen.
      * 
      */
-    public SplashScreen()
+    public GuideWorld()
     {    
         // Create a new world with 1000x800 cells with a cell size of 1x1 pixels.
         super(1000, 800, 1); 

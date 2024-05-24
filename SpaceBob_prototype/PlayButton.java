@@ -14,6 +14,17 @@ public class PlayButton extends Actor
      */
     public void act()
     {
-        // Add your action code here.
+        if (Greenfoot.mouseMoved(this)) {
+            setImage("Menu_Play_Highlighted.png");
+        }
+
+        if (Greenfoot.mouseMoved(getWorld())) {
+            setImage("Menu_Play.png");
+        }
+
+        if (Greenfoot.mouseClicked(this)) {
+            Greenfoot.delay(20);
+            Greenfoot.setWorld(new Level_1());
+        }
     }
 }

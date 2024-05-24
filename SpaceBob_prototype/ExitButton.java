@@ -14,6 +14,22 @@ public class ExitButton extends Actor
      */
     public void act()
     {
-        // Add your action code here.
+        if (Greenfoot.mouseMoved(this)) {
+            setImage("Menu_Exit_Highlighted.png");
+        }
+
+        if (Greenfoot.mouseMoved(getWorld())) {
+            setImage("Menu_Exit.png");
+        }
+
+        if (Greenfoot.mouseClicked(this)) {
+            Display display = new Display();
+            getWorld().addObject(display , 280, 500);
+            display.setImage(new GreenfootImage("Press X if you are sure you want to exit",
+            48, Color.WHITE, Color.BLACK, Color.BLUE));
+            if (Greenfoot.isKeyDown("x")) {
+                Greenfoot.stop();
+            }
+        }
     }
 }
