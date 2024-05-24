@@ -20,8 +20,10 @@ public class Bob extends Actor {
     private long lastAnimationTime = 0;
     private long lastCollisionCheckTime = 0;
     private int coins = 0;
+    private int leftEnemies = 0;//
     private World previousWorld;
     private Label coinsCounter;
+    private Label enemiesToKillCounter;//
 
     private GreenfootImage bobwalk1right = new GreenfootImage("bob_walk1right.png");
     private GreenfootImage bobwalk2right = new GreenfootImage("bob_walk2right.png");
@@ -51,7 +53,7 @@ public class Bob extends Actor {
         checkCollisionIfNecessary();
     }
 
-     private double simulationSpeed = 1.0; // Défaut: vitesse de simulation normale
+    private double simulationSpeed = 1.0; // Défaut: vitesse de simulation normale
 
     public void setSimulationSpeed(double speed) {
         this.simulationSpeed = speed;
@@ -180,7 +182,7 @@ public class Bob extends Actor {
     }
 }
 
- private void collectCoin() {
+    private void collectCoin() {
         Actor coin = getOneIntersectingObject(Coin.class);
         if (coin != null) {
             getWorld().removeObject(coin);
@@ -192,6 +194,18 @@ public class Bob extends Actor {
             pickupCoinSound.play();
         }
     }
+    
+    //private void reduceEnemiesLeft() {
+    //    Actor coin = getOneIntersectingObject(Coin.class);
+     
+      //why substract not work and add wroks in collectCoins()??? 
+      //      GameStats.subtractLeftEnemies(1); // Increment coin count using GameStats
+      
+        //    if (coinsCounter != null) {
+       //         coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected()); // Update the coins counter label
+      //      }
+      //  }
+    //}
     
     public Label getCoinsCounter() {
         return coinsCounter;

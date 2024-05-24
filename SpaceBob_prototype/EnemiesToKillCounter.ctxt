@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=EnemiesToKillCounter
+comment1.params=
+comment1.target=EnemiesToKillCounter()
+comment2.params=
+comment2.target=void\ act()
+comment3.params=amount
+comment3.target=void\ changeScore(int)
+comment4.params=
+comment4.target=void\ updateLabel()
+numComments=5
