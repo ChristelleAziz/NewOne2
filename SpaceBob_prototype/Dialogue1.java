@@ -20,7 +20,7 @@ public class Dialogue1 extends World
     }
     public void act()
     {
-        Greenfoot.delay(100);
+        Greenfoot.delay(110);
         Greenfoot.setWorld(new Dialogue2());
     }
 }
