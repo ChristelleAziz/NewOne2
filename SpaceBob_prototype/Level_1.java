@@ -10,9 +10,6 @@ public class Level_1 extends Levels {
     //private Label killedEnemiesCounter;
     //private Label coinsCounter;
     int meteoriteCounter = 0; 
-    //private int level = 1;
-    //public static int coinsAmount = 0;
-   // public static int enemiesLeft = 2;
 
     public Level_1() {
         prepare();

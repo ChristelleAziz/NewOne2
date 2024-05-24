@@ -1,41 +1,23 @@
 import greenfoot.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Level_5 extends Levels {
+    Levels thisGame;
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
-    private Label coinsCounter;
+    //private Label killedEnemiesCounter;
+    //private Label coinsCounter;
+    int meteoriteCounter = 0; 
 
-    public Level_5() {    
+    public Level_5() {
         prepare();
-        //setupBackgroundMusic();
-    }
-    
-     public void setCoinsCounterLabel(String text) {
-        coinsCounter.setText(text);
-    }
-
-    public String getCoinsCounterLabel() {
-        return coinsCounter.getText();
-    }
-    
-    public void changeCoinsCounter(int amount) {
-        String labelText = coinsCounter.getLabel();
-        int index = labelText.indexOf(":");
-        String scoreStr = labelText.substring(index + 2);
-        int score = Integer.parseInt(scoreStr);
-        int newScore = score + amount;
-        coinsCounter.setLabel("Coins: " + newScore);
-    }
-
-    private void respawnMinions() {
-        int numMinions = getObjects(Minion.class).size();
-        int maxMinions = 2; 
-
-        if (numMinions < maxMinions) {
-            addMinions();
-        }
+        // Set the paint order to ensure Bob is always in front
+        setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
+        Bob bob = new Bob();
+        //Label coinsCounter = new Label("Coins: 0"); // Example initialization
+        //bob.setCoinsCounter(coinsCounter);
     }
 
     public void act() {
@@ -45,6 +27,64 @@ public class Level_5 extends Levels {
         super.act();
         adjustActorPositions();
         minionAddedThisAct = false;
+        spawnMeteorites();
+        removeAndReplaceMeteorites();
+        showText("Coins: " + thisGame.coinsAmount, 860, 75);
+        showText("Enemies Left: " + thisGame.enemiesLeft, 860, 40);
+    }
+
+    private void removeAndReplaceMeteorites() {
+        List<Meteorite2> meteoritesToRemove = new ArrayList<>();
+        List<Meteorite2> meteorites = getObjects(Meteorite2.class);
+
+        for (Meteorite2 meteorite : meteorites) {
+            if (meteorite.shouldRemove()) {
+                meteoritesToRemove.add(meteorite);
+            }
+        }
+
+        for (Meteorite2 meteorite : meteoritesToRemove) {
+            int x = meteorite.getX();
+            int y = meteorite.getY();
+
+            removeObject(meteorite);
+
+            // Add the new MeteoriteOnPlanet at the exact same position where Meteorite2 was
+            addObject(new MeteoriteOnPlanet(), x + 120, y + 30);
+        }
+    }
+
+    private void spawnMeteorites() {
+        meteoriteCounter++;
+        if (meteoriteCounter % 100 == 0 && Greenfoot.getRandomNumber(100) < 40) {
+            int centerX = getWidth() / 2;
+            int spawnRange = getWidth() / 4;
+            int spawnX;
+
+            if (Greenfoot.getRandomNumber(2) == 0) {
+                // Generate spawnX further to the right for meteorites moving to the left
+                spawnX = Greenfoot.getRandomNumber(spawnRange * 2) + centerX + spawnRange;
+            } else {
+                // Generate spawnX centered around the middle of the screen for meteorites moving to the right
+                spawnX = Greenfoot.getRandomNumber(spawnRange) + centerX - spawnRange;
+            }
+            addObject(new Meteorite2(), spawnX, 0);
+        }
+    }
+
+    public int getScrollOffset() {
+        // You can return a constant scroll speed for simplicity
+        // Replace 5 with your desired scroll speed value
+        return 5;
+    }
+
+    private void respawnMinions() {
+        int numMinions = getObjects(Minion.class).size();
+        int maxMinions = 4; 
+
+        if (numMinions < maxMinions) {
+            addMinions();
+        }
     }
 
     private void adjustActorPositions() {
@@ -80,28 +120,12 @@ public class Level_5 extends Levels {
         return bobs.isEmpty() ? null : bobs.get(0);
     }
 
-    private void setupBackgroundMusic() {
-        backgroundMusic = new GreenfootSound("background.mp3");
-        adjustVolume(backgroundMusic, 50);
-        playBackgroundMusic();
-    }
-
-    private void playBackgroundMusic() {
-        if (!backgroundMusic.isPlaying()) {
-            backgroundMusic.playLoop();
-        }
-    }
-
-    private void adjustVolume(GreenfootSound sound, int volume) {
-        sound.setVolume(volume);
-    }
-
-    //public void stopped() {
-    ///    backgroundMusic.stop();
-    //}
-
     private void prepare() {
         addPlanetBackground();
+        addPlanet6();
+        addPlanet5();
+        addPlanet1();
+        addPlanet2();
         addKing();
         addMam();
         addCastle();
@@ -110,11 +134,28 @@ public class Level_5 extends Levels {
         addPlatforms();
         addPlanet();
         addSpikes();
-        addMinions();
         addBob();
         addLives();
+        addArmors();
         addBulletsDisplayedFirst();
-        addCoinsCounter();
+    }
+
+    private void addLives() {
+        for (int i = 0; i < 5; i++) {
+            addObject(new Live(), 50 + i * 40, 50);
+        }
+    }
+
+    private void addArmors() {
+        for (int i = 0; i < 5; i++) {
+            addObject(new Armor(), 50 + i * 40, 130);
+        }
+    }
+    
+    private void addBulletsDisplayedFirst() {
+        for (int i = 0; i < 10; i++) {
+            addObject(new BulletDisplayed(), 40 + i * 20, 90);
+        }
     }
 
     private void addClouds() {
@@ -126,6 +167,26 @@ public class Level_5 extends Levels {
         addObject(new PlanetBackground(), 530, 610);
     }
 
+    private void addPlanet6() {
+        addObject(new Planet6(), 836, 124);
+    }
+    
+    private void addPlanet5() {
+        addObject(new Planet5(), 170, 400);
+    }
+    
+    private void addPlanet1() {
+        addObject(new Planet1(), 620, 440);
+    }
+    
+    private void addPlanet2() {
+        addObject(new Planet2(), 417, 180);
+    }
+    
+    private void addPlanet4() {
+        addObject(new Planet5(), 170, 400);
+    }
+    
     private void addCastle() {
         addObject(new Castle(), 523, 533);
     }
@@ -158,28 +219,16 @@ public class Level_5 extends Levels {
     }
 
     private void addBob() {
-        addObject(new Bob(), 172, 491);
+        addObject(new Bob(), 110, 510);
     }
 
     private void addSpikes() {
-        addObject(new Spike(), 184, 626);
+        addObject(new Spike(), 500, 626);
         addObject(new Spike(), 925, 626);
     }
 
     private void addMinions() {
         addObject(new Minion(), getWidth() - 1, 615);
-    }
-
-    private void addLives() {
-        for (int i = 0; i < 5; i++) {
-            addObject(new Live(), 50 + i * 40, 50);
-        }
-    }
-
-    private void addBulletsDisplayedFirst() {
-        for (int i = 0; i < 10; i++) {
-            addObject(new BulletDisplayed(), 40 + i * 20, 90);
-        }
     }
 
     private void spawnCoins() {
@@ -192,10 +241,5 @@ public class Level_5 extends Levels {
         if (Greenfoot.getRandomNumber(1500) <= 2) {
             addObject(new BulletAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
-    }
-    
-    private void addCoinsCounter() {
-        coinsCounter = new Label("Coins: 0");
-        addObject(coinsCounter, 860, 60);
     }
 }

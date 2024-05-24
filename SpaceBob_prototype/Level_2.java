@@ -3,20 +3,21 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Level_2 extends Levels {
-    //private GreenfootSound backgroundMusic;
+    Levels thisGame;
+    private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
+    //private Label killedEnemiesCounter;
+    //private Label coinsCounter;
     int meteoriteCounter = 0; 
-    private int level = 1;
-    public static int coinsAmount = 0;
-    public static int enemiesLeft = 4;
 
-    public Level_2() {    
+    public Level_2() {
         prepare();
-        //setupBackgroundMusic();;
         // Set the paint order to ensure Bob is always in front
         setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
         Bob bob = new Bob();
+        //Label coinsCounter = new Label("Coins: 0"); // Example initialization
+        //bob.setCoinsCounter(coinsCounter);
     }
 
     public void act() {
@@ -28,17 +29,10 @@ public class Level_2 extends Levels {
         minionAddedThisAct = false;
         spawnMeteorites();
         removeAndReplaceMeteorites();
-        showText("Coins: " + coinsAmount, 860, 75);
-        showText("Enemies Left: " + enemiesLeft, 860, 40);
+        showText("Coins: " + thisGame.coinsAmount, 860, 75);
+        showText("Enemies Left: " + thisGame.enemiesLeft, 860, 40);
     }
 
-    private int getEnemiesRequiredForLevelUp() {
-        // Define your logic for how many enemies are required to level up
-        // For example, return 1 for level 1, 5 for level 2, and so on
-        return level * 5;
-    }
-
-    
     private void removeAndReplaceMeteorites() {
         List<Meteorite2> meteoritesToRemove = new ArrayList<>();
         List<Meteorite2> meteorites = getObjects(Meteorite2.class);
@@ -125,26 +119,6 @@ public class Level_2 extends Levels {
         List<Bob> bobs = getObjects(Bob.class);
         return bobs.isEmpty() ? null : bobs.get(0);
     }
-
-    //private void setupBackgroundMusic() {
-    //    backgroundMusic = new GreenfootSound("background.mp3");
-    //    adjustVolume(backgroundMusic, 50);
-    //    playBackgroundMusic();
-    //}
-
-    //private void playBackgroundMusic() {
-    //    if (!backgroundMusic.isPlaying()) {
-    //        backgroundMusic.playLoop();
-    //    }
-    //}
-
-    //private void adjustVolume(GreenfootSound sound, int volume) {
-    //    sound.setVolume(volume);
-    //}
-
-    //public void stopped() {
-    //    backgroundMusic.stop();
-    //}
 
     private void prepare() {
         addPlanetBackground();
@@ -262,7 +236,7 @@ public class Level_2 extends Levels {
             addObject(new Coin(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
     }
- 
+
     private void spawnBullets() {
         if (Greenfoot.getRandomNumber(1500) <= 2) {
             addObject(new BulletAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);

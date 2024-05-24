@@ -58,25 +58,21 @@ public class Bob extends Actor {
     }
     
     public void levelUp() {
-        if (thisGame.enemiesLeft <= 0) {
+        if (thisGame.enemiesLeft == 0) {
             if (level == 1) {
                 Greenfoot.setWorld(new Level_2());
                 thisGame.enemiesLeft = 4;
             } else if (level == 2) {
                 Greenfoot.setWorld(new Level_3());
                 thisGame.enemiesLeft = 6;
-            }
-            if (thisGame.enemiesLeft == 6) {
-                if (level == 3) {
-                    Greenfoot.setWorld(new Level_4());
-                    thisGame.enemiesLeft = 8;
-                }
-            }
-            if (thisGame.enemiesLeft == 8) {
-                if (level == 4) {
-                    Greenfoot.setWorld(new Level_5());
-                    thisGame.enemiesLeft = 10;
-                }
+            } else if (level == 3) {
+                Greenfoot.setWorld(new Level_4());
+                thisGame.enemiesLeft = 8;
+            } else if (level == 4) {
+                Greenfoot.setWorld(new Level_5());
+                thisGame.enemiesLeft = 10;
+            } else if (level == 5) {
+                Greenfoot.setWorld(new WinningDialogue());
             }
             level++;
         }
