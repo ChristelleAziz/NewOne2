@@ -8,4 +8,6 @@ comment3.params=amount
 comment3.target=void\ addCoins(int)
 comment4.params=
 comment4.target=void\ act()
-numComments=5
+comment5.params=
+comment5.target=CoinManager\ getCoinManager()
+numComments=6

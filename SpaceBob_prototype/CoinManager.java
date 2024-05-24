@@ -17,4 +17,12 @@ import greenfoot.*;
 
     public void act() {
     }
+    
+    public CoinManager getCoinManager() {
+    MyGameWorld world = (MyGameWorld) getWorld();
+    if( world != null) {
+        return world.getCoinManager();
+    }
+    return null;
+    }
 }

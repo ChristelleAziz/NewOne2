@@ -3,6 +3,7 @@ import java.util.List;
 
 public class Bob extends Actor {
     Level_1 thisGame;
+    
     private int verticalSpeed = 0;
     private int acceleration = 1;
     private int jumpHeight = -20;
@@ -197,18 +198,6 @@ public class Bob extends Actor {
         }
     }
     
-    //private void reduceEnemiesLeft() {
-    //    Actor coin = getOneIntersectingObject(Coin.class);
-     
-      //why substract not work and add wroks in collectCoins()??? 
-      //      GameStats.subtractLeftEnemies(1); // Increment coin count using GameStats
-      
-        //    if (coinsCounter != null) {
-       //         coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected()); // Update the coins counter label
-      //      }
-      //  }
-    //}
-    
     public Label getCoinsCounter() {
         return coinsCounter;
     }
@@ -285,7 +274,7 @@ private void checkCollision() {
                 if (armorsCount > 0) {
                     loseArmor(); // Bob loses an armor if he has any remaining
                 } else {
-                    //bob.loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
+                    //loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
                 }
                 collisionDetected = true;
             }

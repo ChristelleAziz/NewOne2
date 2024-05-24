@@ -1,6 +1,7 @@
 import greenfoot.*;
 
 public class Bullet extends Actor {
+    Level_1 thisGame;
     private int dx;
     private int dy;
     
@@ -45,7 +46,7 @@ public class Bullet extends Actor {
             Minion m = (Minion) minion;
             m.handleCollision();
             //getWorld().removeObject(this);
-            enemiesLeft--;
+            thisGame.enemiesLeft--;
             return;
         }
     

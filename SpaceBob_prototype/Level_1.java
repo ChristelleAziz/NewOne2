@@ -6,11 +6,12 @@ public class Level_1 extends Levels {
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
-    private Label killedEnemiesCounter;
+    //private Label killedEnemiesCounter;
     //private Label coinsCounter;
     int meteoriteCounter = 0; 
     private int level = 1;
     public static int coinsAmount = 0;
+    public static int enemiesLeft = 2;
 
     public Level_1() {    
         prepare();
@@ -32,6 +33,7 @@ public class Level_1 extends Levels {
         spawnMeteorites();
         removeAndReplaceMeteorites();
         showText("Coins: " + coinsAmount, 860, 75);
+        showText("Enemies Left: " + enemiesLeft, 860, 40);
     }
 
     private int getEnemiesRequiredForLevelUp() {
@@ -90,22 +92,22 @@ public class Level_1 extends Levels {
     //    return coinsCounter.getText();
     //}
     
-    public void setKilledEnemiesCounterLabel(String text) {
-        killedEnemiesCounter.setText(text);
-    }
+    //public void setKilledEnemiesCounterLabel(String text) {
+    //    killedEnemiesCounter.setText(text);
+    //}
 
-    public String getKilledEnemiesCounterLabel() {
-        return killedEnemiesCounter.getText();
-    }
+    //public String getKilledEnemiesCounterLabel() {
+    //    return killedEnemiesCounter.getText();
+    //}
     
-    public void changeKilledEnemiesCounter(int num) {
-        String labelText = killedEnemiesCounter.getLabel();
-        int index = labelText.indexOf(":");
-        String scoreStr = labelText.substring(index + 2);
-        int score = Integer.parseInt(scoreStr);
-        int newScore = score + num;
-        killedEnemiesCounter.setLabel("Enemies Killed: " + newScore);
-    }
+    //public void changeKilledEnemiesCounter(int num) {
+    //    String labelText = killedEnemiesCounter.getLabel();
+    //    int index = labelText.indexOf(":");
+    //    String scoreStr = labelText.substring(index + 2);
+    //    int score = Integer.parseInt(scoreStr);
+    //    int newScore = score + num;
+    //    killedEnemiesCounter.setLabel("Enemies Killed: " + newScore);
+    //}
 
     private void respawnMinions() {
         int numMinions = getObjects(Minion.class).size();
@@ -188,7 +190,7 @@ public class Level_1 extends Levels {
         addArmors();
         addBulletsDisplayedFirst();
         //addCoinsCounter();
-        addKilledEnemiesCounter();
+        //addKilledEnemiesCounter();
     }
 
     private void addLives() {
@@ -220,10 +222,10 @@ public class Level_1 extends Levels {
     //    addObject(coinsCounter, 860, 60);
     //}
 
-    private void addKilledEnemiesCounter() {
-        killedEnemiesCounter = new Label("Enemies Killed: 0");
-        addObject(killedEnemiesCounter, 860, 40);
-    }
+    //private void addKilledEnemiesCounter() {
+    //    killedEnemiesCounter = new Label("Enemies Killed: 0");
+    //    addObject(killedEnemiesCounter, 860, 40);
+    //}
 
     private void addPlanetBackground() {
         addObject(new PlanetBackground(), 530, 610);
