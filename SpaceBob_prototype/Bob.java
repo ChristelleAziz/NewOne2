@@ -152,33 +152,32 @@ public class Bob extends Actor {
         }
     }
 
-private void shootBullet() {
-    // Get the mouse coordinates
-    if (Greenfoot.getMouseInfo() == null)
-    {
-        return;
+ private void shootBullet() {
+    if (bulletsCount > 0) {  // Vérifier s'il reste des munitions
+        if (Greenfoot.getMouseInfo() == null) {
+            return;
+        }
+        int mouseX = Greenfoot.getMouseInfo().getX();
+        int mouseY = Greenfoot.getMouseInfo().getY();
+        double angle = Math.atan2(mouseY - getY(), mouseX - getX());
+        int speed = 5;
+        int dx = (int) (speed * Math.cos(angle));
+        int dy = (int) (speed * Math.sin(angle));
+
+        // Change Bob's image based on the shooting direction
+        if (mouseX > getX()) {
+            setImage(getRightFacingImage());
+        } else {
+            setImage(getLeftFacingImage());
+        }
+
+        getWorld().addObject(new Bullet(dx, dy), getX(), getY());
+
+        bulletsCount--;  // Réduire le nombre de balles ici
+        removeBulletDisplayed();  // Retirer une balle affichée
+        playSound("shoot.wav");
     }
-    int mouseX = Greenfoot.getMouseInfo().getX();
-    int mouseY = Greenfoot.getMouseInfo().getY();
-
-    // Calculate the angle between Bob's position and the mouse click position
-    double angle = Math.atan2(mouseY - getY(), mouseX - getX());
-
-    // Calculate the horizontal and vertical components of bullet velocity
-    int speed = 5; // Adjust bullet speed as needed
-    int dx = (int) (speed * Math.cos(angle));
-    int dy = (int) (speed * Math.sin(angle));
-
-    // Add the bullet with the computed velocity components
-    getWorld().addObject(new Bullet(dx, dy), getX(), getY());
-
-    bulletsCount--; // Réduire le nombre de balles ici
-    removeBulletDisplayed(); // Retirer une balle affichée
-
-    playSound("shoot.wav");
 }
-
-
 
     private void playSound(String filename) {
         GreenfootSound sound = new GreenfootSound(filename);
@@ -248,14 +247,14 @@ private void shootBullet() {
     }
 private void collectBullet() {
     Actor bulletAppearing = getOneIntersectingObject(BulletAppearing.class);
-    if (bulletAppearing != null) {
-        getWorld().removeObject(bulletAppearing);
+    if (bulletAppearing != null && bulletsCount < 10) {
         bulletsCount++;
         addBulletDisplayed();
-        loseBulletDisplayed(); // Appelé uniquement lorsque le joueur collecte une balle
         playSound("pickupCoin.wav");
     }
+    getWorld().removeObject(bulletAppearing);
 }
+
 
 private void checkCollision() {
     Actor badGuy = getOneIntersectingObject(BadGuys.class);
@@ -359,6 +358,34 @@ private GreenfootImage getArmorImage(GreenfootImage originalImage) {
     }
 }
 
+private GreenfootImage getRightFacingImage() {
+    GreenfootImage originalImage = getImage();
+    // Determine which right-facing image corresponds to the original image of Bob
+    if (originalImage == bobwalk1left) {
+        return bobwalk1right;
+    } else if (originalImage == bobwalk2left) {
+        return bobwalk2right;
+    } else if (originalImage == bobwalk3left) {
+        return bobwalk3right;
+    } else { // originalImage == bobwalk4left
+        return bobwalk4right;
+    }
+}
+
+private GreenfootImage getLeftFacingImage() {
+    GreenfootImage originalImage = getImage();
+    // Determine which left-facing image corresponds to the original image of Bob
+    if (originalImage == bobwalk1right) {
+        return bobwalk1left;
+    } else if (originalImage == bobwalk2right) {
+        return bobwalk2left;
+    } else if (originalImage == bobwalk3right) {
+        return bobwalk3left;
+    } else { // originalImage == bobwalk4right
+        return bobwalk4left;
+    }
+}
+
 private void removeLive() {
     List<Live> hearts = getWorld().getObjects(Live.class);
     if (!hearts.isEmpty()) {
@@ -385,20 +412,22 @@ private void loseBulletDisplayed() {
 
 
 private void removeBulletDisplayed() {
-    List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
-    if (!bulletsDisplayed.isEmpty()) {
-        getWorld().removeObject(bulletsDisplayed.get(bulletsDisplayed.size() - 1));
+    List<BulletDisplayed> bullets = getWorld().getObjects(BulletDisplayed.class);
+    if (!bullets.isEmpty()) {
+        BulletDisplayed bullet = bullets.get(bullets.size() - 1); // Retirer le dernier ajouté
+        getWorld().removeObject(bullet);
     }
 }
 
 private void addBulletDisplayed() {
-    List<BulletDisplayed> bulletsDisplayed = getWorld().getObjects(BulletDisplayed.class);
-    if (bulletsDisplayed.size() < 10) {
-        int newX = 40 + bulletsDisplayed.size() * 20;
-        BulletDisplayed newBullet = new BulletDisplayed();
-        getWorld().addObject(newBullet, newX, 90);
+    List<BulletDisplayed> bullets = getWorld().getObjects(BulletDisplayed.class);
+    if (bullets.size() < 10) {
+        int x = 40 + bullets.size() * 20;
+        int y = 90;
+        getWorld().addObject(new BulletDisplayed(), x, y);
     }
 }
+
 
 public void animateRight() {
     if (frame == 1) {

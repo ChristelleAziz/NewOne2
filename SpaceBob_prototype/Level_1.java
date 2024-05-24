@@ -14,7 +14,7 @@ public class Level_1 extends Levels {
         prepare();
         setupBackgroundMusic();
         // Set the paint order to ensure Bob is always in front
-        setPaintOrder(BulletDisplayed.class, CoinsCounter.class, Live.class, Armor.class, Label.class, Bob.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class, Minion.class /* other classes if necessary */);
+        setPaintOrder(BulletDisplayed.class, CoinsCounter.class, Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
     }
 
     public void act() {
@@ -205,6 +205,7 @@ public class Level_1 extends Levels {
             addObject(new BulletDisplayed(), 40 + i * 20, 90);
         }
     }
+
 
     private void addClouds() {
         addObject(new Cloud(), 220, 160);

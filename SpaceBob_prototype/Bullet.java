@@ -49,7 +49,7 @@ public class Bullet extends Actor {
         // Update the bullet count
         return;
     }
-    }
+}
 
 private void updateRotation() {
     // Calculate the rotation angle using trigonometry
