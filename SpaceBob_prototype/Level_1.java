@@ -36,7 +36,7 @@ public class Level_1 extends Levels {
     }
     
     private void spawnArmors() {
-        if (Greenfoot.getRandomNumber(1500) <= 2) {
+        if (Greenfoot.getRandomNumber(5000) <= 2) {
             addObject(new ArmorAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
     }
