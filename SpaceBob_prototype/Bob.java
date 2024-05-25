@@ -7,8 +7,8 @@ public class Bob extends Actor {
     private int verticalSpeed = 0;
     private int acceleration = 1;
     private int jumpHeight = -20;
-    private int livesCount = 5;
-    private int armorsCount = 5;
+    private int livesCount = 3;
+    private int armorsCount = 10;
     private int bulletsCount = 10;
     private boolean isTouchingSpike2 = false;
     private boolean collisionDetected = false;
@@ -70,6 +70,7 @@ public class Bob extends Actor {
         Actor armor = getOneIntersectingObject(Armor.class);
         if (armor != null) {
             addArmor();
+            addArmorDisplayed();
             getWorld().removeObject(armor);
         }
     }
@@ -105,26 +106,6 @@ public class Bob extends Actor {
         return this.simulationSpeed;
     }
     
-    //Begin Pearl + added private int coins and previousWorld
-    //public int getCoins() {
-    //    return coins;
-    //}
-
-    //public void spendCoins(int amount) {
-    //    coins -= amount;
-    //}
-
-    //public void gainLife() {
-    //    livesCount++;
-    //}
-
-    //public World getPreviousWorld() {
-    //    return previousWorld;
-    //}
-
-    //modified loseLife()
-    
-    //End Pearl
     private void checkCollisionIfNecessary() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastCollisionCheckTime >= 200) { // Vérifier la collision toutes les 200 millisecondes
@@ -183,7 +164,6 @@ public class Bob extends Actor {
 
     private void jump() 
     {
-        
         if (onPlatform() || onPlanet()) {
             verticalSpeed = jumpHeight;
             fall();
@@ -229,22 +209,11 @@ public class Bob extends Actor {
         if (coin != null) {
             getWorld().removeObject(coin);
             thisGame.coinsAmount++;
-    //        GameStats.addCoins(1); // Increment coin count using GameStats
-    //        if (coinsCounter != null) {
-    //            coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected()); // Update the coins counter label
-    //        }
-    //        GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
-    //        pickupCoinSound.play();
+            GreenfootSound pickupCoinSound = new GreenfootSound("pickupCoin.wav");
+            pickupCoinSound.play();
         }
     }
-    
-    //public Label getCoinsCounter() {
-    //    return coinsCounter;
-    //}
-    //public void setCoinsCounter(Label coinsCounter) {
-    //    this.coinsCounter = coinsCounter;
-    //}
-    
+
     private void playSound(String filename) {
         GreenfootSound sound = new GreenfootSound(filename);
         sound.setVolume(70);
@@ -255,7 +224,9 @@ public class Bob extends Actor {
         for (Actor object : getWorld().getObjects(Actor.class)) {
             if (!(object instanceof Live) && !(object instanceof BulletDisplayed)
                     && !(object instanceof PlanetBackground) && !(object instanceof Castle)
-                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) && !(object instanceof Star) && !(object instanceof decorPlanets) && !(object instanceof Armor)) {
+                    && !(object instanceof King) && !(object instanceof Mam) && !(object instanceof Label) 
+                    && !(object instanceof Star) && !(object instanceof decorPlanets) 
+                    && !(object instanceof Armor) && !(object instanceof ArmorDisplayed)){
                 object.move(-3);
             }
         }
@@ -291,6 +262,7 @@ public class Bob extends Actor {
     private void collectItems() {
         collectCoin();
         collectBullet();
+        collectArmor();
     }
 
     private void collectBullet() {
@@ -303,6 +275,15 @@ public class Bob extends Actor {
         getWorld().removeObject(bulletAppearing);
     }
 
+    private void collectArmor() {
+        Actor armorAppearing = getOneIntersectingObject(ArmorAppearing.class);
+        if (armorAppearing != null && armorsCount < 10) {
+            armorsCount++;
+            addArmorDisplayed();
+            playSound("pickupCoin.wav");
+        }
+        getWorld().removeObject(armorAppearing);
+    }
 
     private void checkCollision() {
         Actor badGuy = getOneIntersectingObject(BadGuys.class);
@@ -313,7 +294,7 @@ public class Bob extends Actor {
                     if (armorsCount > 0) {
                         loseArmor(); // Bob loses an armor if he has any remaining
                     } else {
-                        //loseLife(getCoinManager()); // Bob loses a life if he doesn't have any armor left
+                        loseLife(); // Bob loses a life if he doesn't have any armor left
                     }
                     collisionDetected = true;
                 }
@@ -323,10 +304,12 @@ public class Bob extends Actor {
         }
     }
 
-
-
     private void decreaseBulletsCount() {
         bulletsCount--;
+    }
+    //code needed???
+    private void decreaseArmorsCount() {
+        armorsCount--;
     }
 
     private boolean isTouchingMinion() {
@@ -343,16 +326,16 @@ public class Bob extends Actor {
         
     }
     
-    private void loseLife(CoinManager coinManager){
+    private void loseLife(){
         if (canLoseLife && !isInvincible) { // Check if Bob is not currently invincible
             livesCount--;
             removeLive();
             if (livesCount <= 0) {
                 getWorld().removeObject(this);
-                previousWorld = getWorld();
-                Greenfoot.setWorld(new ExtraLifeWorld(this, coinManager));
-                //Greenfoot.setWorld(new Background2());
-                //Greenfoot.delay(5);
+                //previousWorld = getWorld();
+                //Greenfoot.setWorld(new ExtraLifeWorld(this, coinManager));
+                Greenfoot.setWorld(new Background2());
+                Greenfoot.delay(5);
             }
         }
     }
@@ -360,7 +343,7 @@ public class Bob extends Actor {
     private void loseArmor() {
         if (canLoseArmor) {
             armorsCount--;
-            removeArmor();
+            removeArmorDisplayed();
             temporaryInvincibility(); // Trigger temporary invincibility every time Bob loses an armor
             if (armorsCount == 0) { // If Bob has lost all armors, disable invincibility
                 isInvincible = false;
@@ -373,7 +356,7 @@ public class Bob extends Actor {
          if (!isInvincible) { // Check if Bob is not currently invincible
             isInvincible = true; // Set Bob as invincible
             GreenfootImage originalImage = getImage();
-                GreenfootImage armorImage = getArmorImage(originalImage); // Get the corresponding image with armor
+            GreenfootImage armorImage = getArmorImage(originalImage); // Get the corresponding image with armor
             long startTime = System.currentTimeMillis();
             while (System.currentTimeMillis() - startTime < 1800) {
                 setImage(armorImage); // Set the image with armor
@@ -441,12 +424,12 @@ public class Bob extends Actor {
         }
     }
 
-    private void removeArmor() {
-        List<Armor> armors = getWorld().getObjects(Armor.class);
-        if (!armors.isEmpty()) {
-            getWorld().removeObject(armors.get(armors.size() - 1));
-        }
-    }
+    //private void removeArmor() {
+    //    List<Armor> armors = getWorld().getObjects(Armor.class);
+    //    if (!armors.isEmpty()) {
+    //        getWorld().removeObject(armors.get(armors.size() - 1));
+    //    }
+    //}
 
     private void loseBulletDisplayed() {
         removeBulletDisplayed();
@@ -457,13 +440,31 @@ public class Bob extends Actor {
             getWorld().removeObject(bulletsDisplayed.get(bulletsDisplayed.size() - 1));
         }
     }
-
+    
+    
+    private void loseArmorDisplayed() {
+        removeArmorDisplayed();
+        // Decrease the displayed armors count
+        List<ArmorDisplayed> armorsDisplayed = getWorld().getObjects(ArmorDisplayed.class);
+        if (!armorsDisplayed.isEmpty()) {
+            // Remove the rightmost displayed armor
+            getWorld().removeObject(armorsDisplayed.get(armorsDisplayed.size() - 1));
+        }
+    }
 
     private void removeBulletDisplayed() {
         List<BulletDisplayed> bullets = getWorld().getObjects(BulletDisplayed.class);
         if (!bullets.isEmpty()) {
             BulletDisplayed bullet = bullets.get(bullets.size() - 1); // Retirer le dernier ajouté
             getWorld().removeObject(bullet);
+        }
+    }
+    
+    private void removeArmorDisplayed() {
+        List<ArmorDisplayed> armors = getWorld().getObjects(ArmorDisplayed.class);
+        if (!armors.isEmpty()) {
+            ArmorDisplayed armor = armors.get(armors.size() - 1);
+            getWorld().removeObject(armor);
         }
     }
 
@@ -475,7 +476,15 @@ public class Bob extends Actor {
             getWorld().addObject(new BulletDisplayed(), x, y);
         }
     }
-
+    
+    private void addArmorDisplayed() {
+        List<ArmorDisplayed> armors = getWorld().getObjects(ArmorDisplayed.class);
+        if (armors.size() < 10) {
+            int x = 40 + armors.size() * 20;
+            int y = 130;
+            getWorld().addObject(new ArmorDisplayed(), x, y);
+        }
+    }
 
     public void animateRight() {
         if (frame == 1) {

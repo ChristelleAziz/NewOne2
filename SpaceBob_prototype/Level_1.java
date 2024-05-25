@@ -7,18 +7,14 @@ public class Level_1 extends Levels {
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
-    //private Label killedEnemiesCounter;
-    //private Label coinsCounter;
     int meteoriteCounter = 0; 
 
     public Level_1() {
         prepare();
         setupBackgroundMusic();;
         // Set the paint order to ensure Bob is always in front
-        setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
+        setPaintOrder(BulletDisplayed.class, BulletAppearing.class, Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
         Bob bob = new Bob();
-        //Label coinsCounter = new Label("Coins: 0"); // Example initialization
-        //bob.setCoinsCounter(coinsCounter);
     }
 
     public void act() {
@@ -36,7 +32,7 @@ public class Level_1 extends Levels {
     }
     
     private void spawnArmors() {
-        if (Greenfoot.getRandomNumber(5000) <= 2) {
+        if (Greenfoot.getRandomNumber(3000) <= 2) {
             addObject(new ArmorAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
     }
@@ -85,27 +81,6 @@ public class Level_1 extends Levels {
         // Replace 5 with your desired scroll speed value
         return 5;
     }
-
-    //public String getCoinsCounterLabel() {
-    //    return coinsCounter.getText();
-    //}
-    
-    //public void setKilledEnemiesCounterLabel(String text) {
-    //    killedEnemiesCounter.setText(text);
-    //}
-
-    //public String getKilledEnemiesCounterLabel() {
-    //    return killedEnemiesCounter.getText();
-    //}
-    
-    //public void changeKilledEnemiesCounter(int num) {
-    //    String labelText = killedEnemiesCounter.getLabel();
-    //    int index = labelText.indexOf(":");
-    //    String scoreStr = labelText.substring(index + 2);
-    //    int score = Integer.parseInt(scoreStr);
-    //    int newScore = score + num;
-    //    killedEnemiesCounter.setLabel("Enemies Killed: " + newScore);
-    //}
 
     private void respawnMinions() {
         int numMinions = getObjects(Minion.class).size();
@@ -185,45 +160,32 @@ public class Level_1 extends Levels {
         addSpikes();
         addBob();
         addLives();
-        addArmors();
         addBulletsDisplayedFirst();
-        //addCoinsCounter();
-        //addKilledEnemiesCounter();
+        addArmorsDisplayedFirst();
     }
 
     private void addLives() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             addObject(new Live(), 50 + i * 40, 50);
         }
     }
 
-    private void addArmors() {
-        for (int i = 0; i < 5; i++) {
-            addObject(new Armor(), 50 + i * 40, 130);
-        }
-    }
-    
     private void addBulletsDisplayedFirst() {
         for (int i = 0; i < 10; i++) {
             addObject(new BulletDisplayed(), 40 + i * 20, 90);
         }
     }
 
-
+    private void addArmorsDisplayedFirst() {
+        for (int i = 0; i < 10; i++) {
+            addObject(new ArmorDisplayed(), 40 + i * 20, 130);
+        }
+    }
+    
     private void addClouds() {
         addObject(new Cloud(), 220, 160);
         addObject(new Cloud(), 690, 110);
     }
-
-    //private void addCoinsCounter() {
-    //    coinsCounter = new Label("Coins: 0");
-    //    addObject(coinsCounter, 860, 60);
-    //}
-
-    //private void addKilledEnemiesCounter() {
-    //    killedEnemiesCounter = new Label("Enemies Killed: 0");
-    //    addObject(killedEnemiesCounter, 860, 40);
-    //}
 
     private void addPlanetBackground() {
         addObject(new PlanetBackground(), 530, 610);
@@ -298,12 +260,7 @@ public class Level_1 extends Levels {
             addObject(new Coin(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
     }
-    
-    //public void changeCoinsCounter(int amount) {
-    //    GameStats.addCoins(amount);
-    //    coinsCounter.setLabel("Coins: " + GameStats.getCoinsCollected());
-    //}
-
+   
     private void spawnBullets() {
         if (Greenfoot.getRandomNumber(1500) <= 2) {
             addObject(new BulletAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
