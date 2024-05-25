@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=ArmorAppearing
+comment1.params=
+comment1.target=ArmorAppearing()
+comment2.params=
+comment2.target=void\ act()
+comment3.params=
+comment3.target=void\ removeIfAtLeftEdge()
+comment3.text=\r\n\ Remove\ the\ coin\ if\ it\ reaches\ the\ left\ edge\ of\ the\ world.\r\n
+numComments=4

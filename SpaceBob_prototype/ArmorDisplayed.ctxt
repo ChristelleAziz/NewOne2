@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.target=ArmorDisplayed
+comment1.params=
+comment1.target=ArmorDisplayed()
+comment1.text=\r\n\ Act\ -\ do\ whatever\ the\ BulletDisplayed\ wants\ to\ do.\ This\ method\ is\ called\ whenever\r\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\r\n
+comment2.params=
+comment2.target=void\ act()
+numComments=3

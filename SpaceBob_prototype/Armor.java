@@ -16,8 +16,16 @@ public class Armor extends Actor
         {
             getImage().scale(getImage().getWidth()/2,getImage().getHeight()/2);
         }
-    public void act()
-    {
-        // Add your action code here.
+    public void act() {
+        removeIfAtLeftEdge();
+    }
+    
+    /**
+     * Remove the coin if it reaches the left edge of the world.
+     */
+    private void removeIfAtLeftEdge() {
+        if (getX() == 0) {
+            getWorld().removeObject(this);
+        }
     }
 }

@@ -55,6 +55,23 @@ public class Bob extends Actor {
         animateIfNecessary();
         checkCollisionIfNecessary();
         levelUp();
+        checkCollisionWithArmor();
+    }
+    
+    public void addArmor() {
+        armorsCount++;
+    }
+
+    public int getArmorCount() {
+        return armorsCount;
+    }
+
+    private void checkCollisionWithArmor() {
+        Actor armor = getOneIntersectingObject(Armor.class);
+        if (armor != null) {
+            addArmor();
+            getWorld().removeObject(armor);
+        }
     }
     
     public void levelUp() {

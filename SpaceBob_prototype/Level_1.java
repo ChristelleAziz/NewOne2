@@ -23,6 +23,7 @@ public class Level_1 extends Levels {
 
     public void act() {
         spawnCoins();
+        spawnArmors();
         spawnBullets();
         checkMinionRespawn();
         super.act();
@@ -33,13 +34,12 @@ public class Level_1 extends Levels {
         showText("Coins: " + thisGame.coinsAmount, 860, 75);
         showText("Enemies Left: " + thisGame.enemiesLeft, 860, 40);
     }
-
-    //private int getEnemiesRequiredForLevelUp() {
-        // Define your logic for how many enemies are required to level up
-        // For example, return 1 for level 1, 5 for level 2, and so on
-    //    return level * 5;
-    //}
-
+    
+    private void spawnArmors() {
+        if (Greenfoot.getRandomNumber(1500) <= 2) {
+            addObject(new ArmorAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
+        }
+    }
     
     private void removeAndReplaceMeteorites() {
         List<Meteorite2> meteoritesToRemove = new ArrayList<>();
