@@ -7,13 +7,12 @@ public class Level_1 extends Levels {
     private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
-    int meteoriteCounter = 0; 
 
     public Level_1() {
         prepare();
         setupBackgroundMusic();;
         // Set the paint order to ensure Bob is always in front
-        setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
+        setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
         Bob bob = new Bob();
     }
 
@@ -25,8 +24,6 @@ public class Level_1 extends Levels {
         super.act();
         adjustActorPositions();
         minionAddedThisAct = false;
-        spawnMeteorites();
-        removeAndReplaceMeteorites();
         showText("Coins: " + thisGame.coinsAmount, 860, 75);
         showText("Enemies Left: " + thisGame.enemiesLeft, 860, 40);
     }
@@ -37,45 +34,6 @@ public class Level_1 extends Levels {
         }
     }
     
-    private void removeAndReplaceMeteorites() {
-        List<Meteorite2> meteoritesToRemove = new ArrayList<>();
-        List<Meteorite2> meteorites = getObjects(Meteorite2.class);
-
-        for (Meteorite2 meteorite : meteorites) {
-            if (meteorite.shouldRemove()) {
-                meteoritesToRemove.add(meteorite);
-            }
-        }
-
-        for (Meteorite2 meteorite : meteoritesToRemove) {
-            int x = meteorite.getX();
-            int y = meteorite.getY();
-
-            removeObject(meteorite);
-
-            // Add the new MeteoriteOnPlanet at the exact same position where Meteorite2 was
-            addObject(new MeteoriteOnPlanet(), x + 120, y + 30);
-        }
-    }
-
-    private void spawnMeteorites() {
-        meteoriteCounter++;
-        if (meteoriteCounter % 100 == 0 && Greenfoot.getRandomNumber(100) < 40) {
-            int centerX = getWidth() / 2;
-            int spawnRange = getWidth() / 4;
-            int spawnX;
-
-            if (Greenfoot.getRandomNumber(2) == 0) {
-                // Generate spawnX further to the right for meteorites moving to the left
-                spawnX = Greenfoot.getRandomNumber(spawnRange * 2) + centerX + spawnRange;
-            } else {
-                // Generate spawnX centered around the middle of the screen for meteorites moving to the right
-                spawnX = Greenfoot.getRandomNumber(spawnRange) + centerX - spawnRange;
-            }
-            addObject(new Meteorite2(), spawnX, 0);
-        }
-    }
-
     public int getScrollOffset() {
         // You can return a constant scroll speed for simplicity
         // Replace 5 with your desired scroll speed value
