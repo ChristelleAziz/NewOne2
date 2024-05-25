@@ -4,11 +4,8 @@ import java.util.ArrayList;
 
 public class Level_5 extends Levels {
     Levels thisGame;
-    private GreenfootSound backgroundMusic;
     private int scrollOffset = 0;
     private int minionSpawnTimer = Greenfoot.getRandomNumber(200) + 100;
-    //private Label killedEnemiesCounter;
-    //private Label coinsCounter;
     int meteoriteCounter = 0; 
 
     public Level_5() {
@@ -16,12 +13,11 @@ public class Level_5 extends Levels {
         // Set the paint order to ensure Bob is always in front
         setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
         Bob bob = new Bob();
-        //Label coinsCounter = new Label("Coins: 0"); // Example initialization
-        //bob.setCoinsCounter(coinsCounter);
     }
 
     public void act() {
         spawnCoins();
+        spawnArmors();
         spawnBullets();
         checkMinionRespawn();
         super.act();
@@ -32,7 +28,13 @@ public class Level_5 extends Levels {
         showText("Coins: " + thisGame.coinsAmount, 860, 75);
         showText("Enemies Left: " + thisGame.enemiesLeft, 860, 40);
     }
-
+    
+    private void spawnArmors() {
+        if (Greenfoot.getRandomNumber(3000) <= 2) {
+            addObject(new ArmorAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
+        }
+    }
+    
     private void removeAndReplaceMeteorites() {
         List<Meteorite2> meteoritesToRemove = new ArrayList<>();
         List<Meteorite2> meteorites = getObjects(Meteorite2.class);
@@ -120,6 +122,7 @@ public class Level_5 extends Levels {
         return bobs.isEmpty() ? null : bobs.get(0);
     }
 
+
     private void prepare() {
         addPlanetBackground();
         addPlanet6();
@@ -136,28 +139,28 @@ public class Level_5 extends Levels {
         addSpikes();
         addBob();
         addLives();
-        addArmors();
         addBulletsDisplayedFirst();
+        addArmorsDisplayedFirst();
     }
 
     private void addLives() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             addObject(new Live(), 50 + i * 40, 50);
         }
     }
 
-    private void addArmors() {
-        for (int i = 0; i < 5; i++) {
-            addObject(new Armor(), 50 + i * 40, 130);
-        }
-    }
-    
     private void addBulletsDisplayedFirst() {
         for (int i = 0; i < 10; i++) {
             addObject(new BulletDisplayed(), 40 + i * 20, 90);
         }
     }
 
+    private void addArmorsDisplayedFirst() {
+        for (int i = 0; i < 10; i++) {
+            addObject(new ArmorDisplayed(), 40 + i * 20, 130);
+        }
+    }
+    
     private void addClouds() {
         addObject(new Cloud(), 220, 160);
         addObject(new Cloud(), 690, 110);
@@ -236,7 +239,7 @@ public class Level_5 extends Levels {
             addObject(new Coin(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
         }
     }
-
+   
     private void spawnBullets() {
         if (Greenfoot.getRandomNumber(1500) <= 2) {
             addObject(new BulletAppearing(), getWidth() - 1, Greenfoot.getRandomNumber(277) + 343);
