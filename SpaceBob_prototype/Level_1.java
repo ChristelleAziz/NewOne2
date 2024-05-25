@@ -13,7 +13,7 @@ public class Level_1 extends Levels {
         prepare();
         setupBackgroundMusic();;
         // Set the paint order to ensure Bob is always in front
-        setPaintOrder(BulletDisplayed.class, BulletAppearing.class, Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
+        setPaintOrder(BulletDisplayed.class, /*CoinsCounter.class, */ Live.class, Armor.class, Label.class, Bob.class, Minion.class, MeteoriteOnPlanet.class, Meteorite2.class, Coin.class, BulletAppearing.class /* other classes if necessary */);
         Bob bob = new Bob();
     }
 
