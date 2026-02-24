@@ -1,2 +1,1 @@
-# NewOne2
-New repo
+# 2D Platformer game made with java
